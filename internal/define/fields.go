@@ -109,6 +109,31 @@ func (f *fieldsDef) IsDummy() *schema.FieldDesc {
 	}
 }
 
+func (f *fieldsDef) HostName() *schema.FieldDesc {
+	return &schema.FieldDesc{
+		Name: "HostName",
+		Type: meta.TypeString,
+	}
+}
+func (f *fieldsDef) IPAddress() *schema.FieldDesc {
+	return &schema.FieldDesc{
+		Name: "IPAddress",
+		Type: meta.TypeString,
+	}
+}
+func (f *fieldsDef) User() *schema.FieldDesc {
+	return &schema.FieldDesc{
+		Name: "User",
+		Type: meta.TypeString,
+	}
+}
+func (f *fieldsDef) Password() *schema.FieldDesc {
+	return &schema.FieldDesc{
+		Name: "Password",
+		Type: meta.TypeString,
+	}
+}
+
 func (f *fieldsDef) VNCProxy() *schema.FieldDesc {
 	return &schema.FieldDesc{
 		Name: "VNCProxy",

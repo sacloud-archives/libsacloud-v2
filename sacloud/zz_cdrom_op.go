@@ -76,7 +76,7 @@ func (o *CDROMOp) Find(ctx context.Context, zone string, conditions *FindConditi
 }
 
 // Create is API call
-func (o *CDROMOp) Create(ctx context.Context, zone string, param *CDROMCreateRequest) (*CDROM, error) {
+func (o *CDROMOp) Create(ctx context.Context, zone string, param *CDROMCreateRequest) (*CDROM, *FTPServer, error) {
 	url, err := buildURL("{{.rootURL}}/{{.zone}}/{{.pathSuffix}}/{{.pathName}}", map[string]interface{}{
 		"rootURL":    SakuraCloudAPIRoot,
 		"pathSuffix": o.PathSuffix,
@@ -85,7 +85,7 @@ func (o *CDROMOp) Create(ctx context.Context, zone string, param *CDROMCreateReq
 		"param":      param,
 	})
 	if err != nil {
-		return nil, err
+		return nil, nil, err
 	}
 
 	var body interface{}
@@ -96,7 +96,7 @@ func (o *CDROMOp) Create(ctx context.Context, zone string, param *CDROMCreateReq
 		v := body.(*CDROMCreateRequestEnvelope)
 		n, err := param.toNaked()
 		if err != nil {
-			return nil, err
+			return nil, nil, err
 		}
 		v.CDROM = n
 		body = v
@@ -104,19 +104,23 @@ func (o *CDROMOp) Create(ctx context.Context, zone string, param *CDROMCreateReq
 
 	data, err := o.Client.Do(ctx, "POST", url, body)
 	if err != nil {
-		return nil, err
+		return nil, nil, err
 	}
 
 	nakedResponse := &CDROMCreateResponseEnvelope{}
 	if err := json.Unmarshal(data, nakedResponse); err != nil {
-		return nil, err
+		return nil, nil, err
 	}
 
 	payload0 := &CDROM{}
 	if err := payload0.parseNaked(nakedResponse.CDROM); err != nil {
-		return nil, err
+		return nil, nil, err
 	}
-	return payload0, nil
+	payload1 := &FTPServer{}
+	if err := payload1.parseNaked(nakedResponse.FTPServer); err != nil {
+		return nil, nil, err
+	}
+	return payload0, payload1, nil
 }
 
 // Read is API call

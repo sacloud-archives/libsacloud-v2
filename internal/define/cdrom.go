@@ -7,6 +7,8 @@ import (
 )
 
 func init() {
+	nakedType := meta.Static(naked.CDROM{})
+
 	cdrom := &schema.Model{
 		Fields: []*schema.FieldDesc{
 			fields.ID(),
@@ -21,6 +23,17 @@ func init() {
 			fields.Icon(),
 			fields.CreatedAt(),
 			fields.ModifiedAt(),
+		},
+	}
+
+	ftpServer := &schema.Model{
+		Name:      "FTPServer",
+		NakedType: meta.Static(naked.OpeningFTPServer{}),
+		Fields: []*schema.FieldDesc{
+			fields.HostName(),
+			fields.IPAddress(),
+			fields.User(),
+			fields.Password(),
 		},
 	}
 
@@ -43,6 +56,23 @@ func init() {
 		},
 	}
 
-	Resources.Define("CDROM").
-		OperationCRUD(meta.Static(naked.CDROM{}), findParameter, createParam, updateParam, cdrom)
+	Resources.DefineWith("CDROM", func(r *schema.Resource) {
+		r.Operations(
+			// find
+			r.DefineOperationFind(nakedType, findParameter, cdrom),
+			// create
+			r.DefineOperationCreate(nakedType, createParam, cdrom).
+				ResponseEnvelope(&schema.EnvelopePayloadDesc{ // TODO エンベロープとResultを同時に定義できないか?
+					PayloadName: "FTPServer",
+					PayloadType: meta.Static(naked.OpeningFTPServer{}),
+				}).
+				ResultWithSourceField("FTPServer", ftpServer),
+			// read
+			r.DefineOperationRead(nakedType, cdrom),
+			// update
+			r.DefineOperationUpdate(nakedType, updateParam, cdrom),
+			// delete
+			r.DefineOperationDelete(),
+		)
+	})
 }

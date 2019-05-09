@@ -90,6 +90,9 @@ func (o *Operation) Result(m *Model) *Operation {
 
 // ResultWithSourceField レスポンス定義の追加
 func (o *Operation) ResultWithSourceField(sourceField string, m *Model) *Operation {
+	if sourceField == "" {
+		sourceField = m.Name
+	}
 	o.results = append(o.results, &Result{Model: m, SourceField: sourceField})
 	return o
 }
@@ -274,6 +277,9 @@ func (o *Operation) Models() Models {
 	}
 	for _, arg := range o.PassthroughFieldDeciders() {
 		ms = append(ms, arg.DestinationModel())
+	}
+	for _, res := range o.results {
+		ms = append(ms, res.Model)
 	}
 	return Models(ms).UniqByName()
 }

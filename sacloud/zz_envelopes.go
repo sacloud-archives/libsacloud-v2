@@ -35,7 +35,8 @@ type CDROMCreateResponseEnvelope struct {
 	IsOk    bool `json:"is_ok,omitempty"` // is_ok項目
 	Success bool `json:",omitempty"`      // success項目
 
-	CDROM *naked.CDROM `json:",omitempty"`
+	CDROM     *naked.CDROM            `json:",omitempty"`
+	FTPServer *naked.OpeningFTPServer `json:",omitempty"`
 }
 
 // CDROMReadResponseEnvelope is envelop of API response

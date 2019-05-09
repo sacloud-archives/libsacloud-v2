@@ -248,6 +248,75 @@ func (o *FindCondition) SetExclude(v []string) {
 }
 
 /*************************************************
+* FTPServer
+*************************************************/
+
+// FTPServer represents API parameter/response structure
+type FTPServer struct {
+	HostName  string
+	IPAddress string
+	User      string
+	Password  string
+}
+
+// Validate validates by field tags
+func (o *FTPServer) Validate() error {
+	return validator.New().Struct(o)
+}
+
+// GetHostName returns value of HostName
+func (o *FTPServer) GetHostName() string {
+	return o.HostName
+}
+
+// SetHostName sets value to HostName
+func (o *FTPServer) SetHostName(v string) {
+	o.HostName = v
+}
+
+// GetIPAddress returns value of IPAddress
+func (o *FTPServer) GetIPAddress() string {
+	return o.IPAddress
+}
+
+// SetIPAddress sets value to IPAddress
+func (o *FTPServer) SetIPAddress(v string) {
+	o.IPAddress = v
+}
+
+// GetUser returns value of User
+func (o *FTPServer) GetUser() string {
+	return o.User
+}
+
+// SetUser sets value to User
+func (o *FTPServer) SetUser(v string) {
+	o.User = v
+}
+
+// GetPassword returns value of Password
+func (o *FTPServer) GetPassword() string {
+	return o.Password
+}
+
+// SetPassword sets value to Password
+func (o *FTPServer) SetPassword(v string) {
+	o.Password = v
+}
+
+// toNaked returns naked FTPServer
+func (o *FTPServer) toNaked() (*naked.OpeningFTPServer, error) {
+	dest := &naked.OpeningFTPServer{}
+	err := mapconv.ToNaked(o, dest)
+	return dest, err
+}
+
+// parseNaked parse values from naked FTPServer
+func (o *FTPServer) parseNaked(naked *naked.OpeningFTPServer) error {
+	return mapconv.FromNaked(naked, o)
+}
+
+/*************************************************
 * CDROMCreateRequest
 *************************************************/
 

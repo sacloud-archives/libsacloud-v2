@@ -9,7 +9,7 @@ import (
 // CDROMAPI is interface for operate CDROM resource
 type CDROMAPI interface {
 	Find(ctx context.Context, zone string, conditions *FindCondition) ([]*CDROM, error)
-	Create(ctx context.Context, zone string, param *CDROMCreateRequest) (*CDROM, error)
+	Create(ctx context.Context, zone string, param *CDROMCreateRequest) (*CDROM, *FTPServer, error)
 	Read(ctx context.Context, zone string, id int64) (*CDROM, error)
 	Update(ctx context.Context, zone string, id int64, param *CDROMUpdateRequest) (*CDROM, error)
 	Delete(ctx context.Context, zone string, id int64) error

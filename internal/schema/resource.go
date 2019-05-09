@@ -42,6 +42,13 @@ func (r *Resources) Define(name string) *Resource {
 	return rs
 }
 
+// DefineWith リソースの定義 & 定義したリソースを利用するfuncの実施
+func (r *Resources) DefineWith(name string, f func(*Resource)) *Resource {
+	rs := r.Define(name)
+	f(rs)
+	return rs
+}
+
 // Models モデル一覧を取得
 func (r Resources) Models() Models {
 	ms := Models{}
@@ -264,14 +271,21 @@ func (r *Resource) OperationDelete() *Resource {
 	return r.Operation(r.DefineOperationDelete())
 }
 
-// OperationCRUD リソースに対する基本的なCRUDを定義
+// DefineOperationCRUD リソースに対する基本的なCRUDを定義
+func (r *Resource) DefineOperationCRUD(nakedType meta.Type, findParam, createParam, updateParam, result *Model) []*Operation {
+	var ops []*Operation
+	ops = append(ops, r.DefineOperationFind(nakedType, findParam, result))
+	ops = append(ops, r.DefineOperationCreate(nakedType, createParam, result))
+	ops = append(ops, r.DefineOperationRead(nakedType, result))
+	ops = append(ops, r.DefineOperationUpdate(nakedType, updateParam, result))
+	ops = append(ops, r.DefineOperationDelete())
+	return ops
+}
+
+// OperationCRUD リソースに対する基本的なCRUDを追加
 func (r *Resource) OperationCRUD(nakedType meta.Type, findParam, createParam, updateParam, result *Model) *Resource {
 	r.Operations(
-		r.DefineOperationFind(nakedType, findParam, result),
-		r.DefineOperationCreate(nakedType, createParam, result),
-		r.DefineOperationRead(nakedType, result),
-		r.DefineOperationUpdate(nakedType, updateParam, result),
-		r.DefineOperationDelete(),
+		r.DefineOperationCRUD(nakedType, findParam, createParam, updateParam, result)...,
 	)
 	return r
 }
