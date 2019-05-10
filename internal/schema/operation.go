@@ -70,6 +70,22 @@ func (o *Operation) PassthroughArgument(name string, model *Model) *Operation {
 	})
 }
 
+// PassthroughArgumentToPayload 引数定義の追加、ペイロードの定義も同時に行われる
+func (o *Operation) PassthroughArgumentToPayload(name string, model *Model) *Operation {
+	var descs []*EnvelopePayloadDesc
+	for _, field := range model.Fields {
+		descs = append(descs, &EnvelopePayloadDesc{
+			PayloadName: field.Name,
+			PayloadType: field.Type,
+		})
+	}
+	o.RequestEnvelope(descs...)
+	return o.Argument(&PassthroughArgument{
+		Name:  name,
+		Model: model,
+	})
+}
+
 // Arguments 引数定義の追加(複数)
 func (o *Operation) Arguments(args []Argument) *Operation {
 	o.arguments = append(o.arguments, args...)

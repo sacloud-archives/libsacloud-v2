@@ -466,6 +466,30 @@ func (o *CDROMUpdateRequest) parseNaked(naked *naked.CDROM) error {
 }
 
 /*************************************************
+* OpenFTPParam
+*************************************************/
+
+// OpenFTPParam represents API parameter/response structure
+type OpenFTPParam struct {
+	ChangePassword bool
+}
+
+// Validate validates by field tags
+func (o *OpenFTPParam) Validate() error {
+	return validator.New().Struct(o)
+}
+
+// GetChangePassword returns value of ChangePassword
+func (o *OpenFTPParam) GetChangePassword() bool {
+	return o.ChangePassword
+}
+
+// SetChangePassword sets value to ChangePassword
+func (o *OpenFTPParam) SetChangePassword(v bool) {
+	o.ChangePassword = v
+}
+
+/*************************************************
 * Note
 *************************************************/
 

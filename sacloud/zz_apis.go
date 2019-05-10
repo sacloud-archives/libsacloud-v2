@@ -17,6 +17,8 @@ type CDROMAPI interface {
 	Read(ctx context.Context, zone string, id int64) (*CDROM, error)
 	Update(ctx context.Context, zone string, id int64, param *CDROMUpdateRequest) (*CDROM, error)
 	Delete(ctx context.Context, zone string, id int64) error
+	OpenFTP(ctx context.Context, zone string, id int64, openOption *OpenFTPParam) (*FTPServer, error)
+	CloseFTP(ctx context.Context, zone string, id int64) error
 }
 
 /*************************************************

@@ -60,6 +60,19 @@ type CDROMUpdateResponseEnvelope struct {
 	CDROM *naked.CDROM `json:",omitempty"`
 }
 
+// CDROMOpenFTPRequestEnvelope is envelop of API request
+type CDROMOpenFTPRequestEnvelope struct {
+	ChangePassword bool `json:",omitempty"`
+}
+
+// CDROMOpenFTPResponseEnvelope is envelop of API response
+type CDROMOpenFTPResponseEnvelope struct {
+	IsOk    bool `json:"is_ok,omitempty"` // is_ok項目
+	Success bool `json:",omitempty"`      // success項目
+
+	FTPServer *naked.OpeningFTPServer `json:",omitempty"`
+}
+
 // NoteFindRequestEnvelope is envelop of API request
 type NoteFindRequestEnvelope struct {
 	Count   int                    `json:",omitempty"`

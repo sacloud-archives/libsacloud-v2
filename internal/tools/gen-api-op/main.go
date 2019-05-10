@@ -79,6 +79,9 @@ func (o *{{ $typeName }}Op) {{ .MethodName }}(ctx context.Context{{ range .AllAr
 	{{- $structName := .RequestEnvelopeStructName -}}
 	{{ range .MapDestinationDeciders }} 
 	{
+		if {{.ArgName}} == nil {
+			{{.ArgName}} = {{.ZeroInitializer}}
+		}
 		if body == nil {
 			body = &{{$structName}}{}
 		}
@@ -94,6 +97,9 @@ func (o *{{ $typeName }}Op) {{ .MethodName }}(ctx context.Context{{ range .AllAr
 	{{ range .PassthroughFieldDeciders}} 
 	{{- $argName := .ArgName -}}
 	{
+		if {{.ArgName}} == nil {
+			{{.ArgName}} = {{.ZeroInitializer}}
+		}
 		if body == nil {
 			body = &{{$structName}}{}
 		}

@@ -45,6 +45,9 @@ func (o *CDROMOp) Find(ctx context.Context, zone string, conditions *FindConditi
 
 	var body interface{}
 	{
+		if conditions == nil {
+			conditions = &FindCondition{}
+		}
 		if body == nil {
 			body = &CDROMFindRequestEnvelope{}
 		}
@@ -94,6 +97,9 @@ func (o *CDROMOp) Create(ctx context.Context, zone string, param *CDROMCreateReq
 
 	var body interface{}
 	{
+		if param == nil {
+			param = &CDROMCreateRequest{}
+		}
 		if body == nil {
 			body = &CDROMCreateRequestEnvelope{}
 		}
@@ -175,6 +181,9 @@ func (o *CDROMOp) Update(ctx context.Context, zone string, id int64, param *CDRO
 
 	var body interface{}
 	{
+		if param == nil {
+			param = &CDROMUpdateRequest{}
+		}
 		if body == nil {
 			body = &CDROMUpdateRequestEnvelope{}
 		}
@@ -207,6 +216,73 @@ func (o *CDROMOp) Update(ctx context.Context, zone string, id int64, param *CDRO
 // Delete is API call
 func (o *CDROMOp) Delete(ctx context.Context, zone string, id int64) error {
 	url, err := buildURL("{{.rootURL}}/{{.zone}}/{{.pathSuffix}}/{{.pathName}}/{{.id}}", map[string]interface{}{
+		"rootURL":    SakuraCloudAPIRoot,
+		"pathSuffix": o.PathSuffix,
+		"pathName":   o.PathName,
+		"zone":       zone,
+		"id":         id,
+	})
+	if err != nil {
+		return err
+	}
+
+	var body interface{}
+
+	_, err = o.Client.Do(ctx, "DELETE", url, body)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+// OpenFTP is API call
+func (o *CDROMOp) OpenFTP(ctx context.Context, zone string, id int64, openOption *OpenFTPParam) (*FTPServer, error) {
+	url, err := buildURL("{{.rootURL}}/{{.zone}}/{{.pathSuffix}}/{{.pathName}}/{{.id}}/ftp", map[string]interface{}{
+		"rootURL":    SakuraCloudAPIRoot,
+		"pathSuffix": o.PathSuffix,
+		"pathName":   o.PathName,
+		"zone":       zone,
+		"id":         id,
+		"openOption": openOption,
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	var body interface{}
+	{
+		if openOption == nil {
+			openOption = &OpenFTPParam{}
+		}
+		if body == nil {
+			body = &CDROMOpenFTPRequestEnvelope{}
+		}
+		v := body.(*CDROMOpenFTPRequestEnvelope)
+		v.ChangePassword = openOption.ChangePassword
+		body = v
+	}
+
+	data, err := o.Client.Do(ctx, "PUT", url, body)
+	if err != nil {
+		return nil, err
+	}
+
+	nakedResponse := &CDROMOpenFTPResponseEnvelope{}
+	if err := json.Unmarshal(data, nakedResponse); err != nil {
+		return nil, err
+	}
+
+	payload0 := &FTPServer{}
+	if err := payload0.parseNaked(nakedResponse.FTPServer); err != nil {
+		return nil, err
+	}
+	return payload0, nil
+}
+
+// CloseFTP is API call
+func (o *CDROMOp) CloseFTP(ctx context.Context, zone string, id int64) error {
+	url, err := buildURL("{{.rootURL}}/{{.zone}}/{{.pathSuffix}}/{{.pathName}}/{{.id}}/ftp", map[string]interface{}{
 		"rootURL":    SakuraCloudAPIRoot,
 		"pathSuffix": o.PathSuffix,
 		"pathName":   o.PathName,
@@ -265,6 +341,9 @@ func (o *NoteOp) Find(ctx context.Context, zone string, conditions *FindConditio
 
 	var body interface{}
 	{
+		if conditions == nil {
+			conditions = &FindCondition{}
+		}
 		if body == nil {
 			body = &NoteFindRequestEnvelope{}
 		}
@@ -314,6 +393,9 @@ func (o *NoteOp) Create(ctx context.Context, zone string, param *NoteCreateReque
 
 	var body interface{}
 	{
+		if param == nil {
+			param = &NoteCreateRequest{}
+		}
 		if body == nil {
 			body = &NoteCreateRequestEnvelope{}
 		}
@@ -391,6 +473,9 @@ func (o *NoteOp) Update(ctx context.Context, zone string, id int64, param *NoteU
 
 	var body interface{}
 	{
+		if param == nil {
+			param = &NoteUpdateRequest{}
+		}
 		if body == nil {
 			body = &NoteUpdateRequestEnvelope{}
 		}
@@ -481,6 +566,9 @@ func (o *ZoneOp) Find(ctx context.Context, zone string, conditions *FindConditio
 
 	var body interface{}
 	{
+		if conditions == nil {
+			conditions = &FindCondition{}
+		}
 		if body == nil {
 			body = &ZoneFindRequestEnvelope{}
 		}
