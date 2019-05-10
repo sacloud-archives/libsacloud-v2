@@ -88,6 +88,34 @@ func (o *Operation) Result(m *Model) *Operation {
 	return o.ResultWithSourceField(sourceField, m)
 }
 
+// ResultFromEnvelope エンベロープから抽出するレスポンス定義の追加
+func (o *Operation) ResultFromEnvelope(m *Model, sourceField *EnvelopePayloadDesc) *Operation {
+	if o.responseEnvelope == nil {
+		o.responseEnvelope = &EnvelopeType{
+			Form: PayloadForms.Singular,
+		}
+	}
+	if sourceField.PayloadName == "" {
+		sourceField.PayloadName = o.resource.FieldName(o.responseEnvelope.Form)
+	}
+	o.responseEnvelope.Payloads = append(o.responseEnvelope.Payloads, sourceField)
+	return o.ResultWithSourceField(sourceField.PayloadName, m)
+}
+
+// ResultPluralFromEnvelope エンベロープから抽出するレスポンス定義の追加(複数形)
+func (o *Operation) ResultPluralFromEnvelope(m *Model, sourceField *EnvelopePayloadDesc) *Operation {
+	if o.responseEnvelope == nil {
+		o.responseEnvelope = &EnvelopeType{
+			Form: PayloadForms.Plural,
+		}
+	}
+	if sourceField.PayloadName == "" {
+		sourceField.PayloadName = o.resource.FieldName(o.responseEnvelope.Form)
+	}
+	o.responseEnvelope.Payloads = append(o.responseEnvelope.Payloads, sourceField)
+	return o.ResultWithSourceField(sourceField.PayloadName, m)
+}
+
 // ResultWithSourceField レスポンス定義の追加
 func (o *Operation) ResultWithSourceField(sourceField string, m *Model) *Operation {
 	if sourceField == "" {
@@ -126,38 +154,6 @@ func (o *Operation) RequestEnvelopePlural(descs ...*EnvelopePayloadDesc) *Operat
 			desc.PayloadName = o.resource.FieldName(o.requestEnvelope.Form)
 		}
 		o.requestEnvelope.Payloads = append(o.requestEnvelope.Payloads, desc)
-	}
-	return o
-}
-
-// ResponseEnvelope レスポンスのエンベロープを追加する
-func (o *Operation) ResponseEnvelope(descs ...*EnvelopePayloadDesc) *Operation {
-	if o.responseEnvelope == nil {
-		o.responseEnvelope = &EnvelopeType{
-			Form: PayloadForms.Singular,
-		}
-	}
-	for _, desc := range descs {
-		if desc.PayloadName == "" {
-			desc.PayloadName = o.resource.FieldName(o.responseEnvelope.Form)
-		}
-		o.responseEnvelope.Payloads = append(o.responseEnvelope.Payloads, desc)
-	}
-	return o
-}
-
-// ResponseEnvelopePlural レスポンスのエンベロープを複数形として追加する
-func (o *Operation) ResponseEnvelopePlural(descs ...*EnvelopePayloadDesc) *Operation {
-	if o.responseEnvelope == nil {
-		o.responseEnvelope = &EnvelopeType{
-			Form: PayloadForms.Plural,
-		}
-	}
-	for _, desc := range descs {
-		if desc.PayloadName == "" {
-			desc.PayloadName = o.resource.FieldName(o.responseEnvelope.Form)
-		}
-		o.responseEnvelope.Payloads = append(o.responseEnvelope.Payloads, desc)
 	}
 	return o
 }

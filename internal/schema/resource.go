@@ -159,10 +159,9 @@ func (r *Resource) DefineOperationFind(nakedType meta.Type, findParam, result *M
 		Method(http.MethodGet).
 		PathFormat(DefaultPathFormat).
 		RequestEnvelope(findEnvelope...).
-		ResponseEnvelopePlural(&EnvelopePayloadDesc{PayloadType: nakedType}).
 		Argument(ArgumentZone).
 		PassthroughArgument("conditions", findParam).
-		Result(result)
+		ResultPluralFromEnvelope(result, &EnvelopePayloadDesc{PayloadType: nakedType})
 }
 
 // OperationFind Find操作を追加
@@ -190,10 +189,9 @@ func (r *Resource) DefineOperationCreate(nakedType meta.Type, createParam, resul
 		Method(http.MethodPost).
 		PathFormat(DefaultPathFormat).
 		RequestEnvelope(&EnvelopePayloadDesc{PayloadType: nakedType}).
-		ResponseEnvelope(&EnvelopePayloadDesc{PayloadType: nakedType}).
 		Argument(ArgumentZone).
 		MappableArgument("param", createParam).
-		Result(result)
+		ResultFromEnvelope(result, &EnvelopePayloadDesc{PayloadType: nakedType})
 }
 
 // OperationCreate Create操作を追加
@@ -214,10 +212,9 @@ func (r *Resource) DefineOperationRead(nakedType meta.Type, result *Model) *Oper
 	return r.DefineOperation("Read").
 		Method(http.MethodGet).
 		PathFormat(DefaultPathFormatWithID).
-		ResponseEnvelope(&EnvelopePayloadDesc{PayloadType: nakedType}).
 		Argument(ArgumentZone).
 		Argument(ArgumentID).
-		Result(result)
+		ResultFromEnvelope(result, &EnvelopePayloadDesc{PayloadType: nakedType})
 }
 
 // OperationRead Read操作を追加
@@ -245,11 +242,10 @@ func (r *Resource) DefineOperationUpdate(nakedType meta.Type, updateParam, resul
 		Method(http.MethodPut).
 		PathFormat(DefaultPathFormatWithID).
 		RequestEnvelope(&EnvelopePayloadDesc{PayloadType: nakedType}).
-		ResponseEnvelope(&EnvelopePayloadDesc{PayloadType: nakedType}).
 		Argument(ArgumentZone).
 		Argument(ArgumentID).
 		MappableArgument("param", updateParam).
-		Result(result)
+		ResultFromEnvelope(result, &EnvelopePayloadDesc{PayloadType: nakedType})
 }
 
 // OperationUpdate Update操作を追加

@@ -62,11 +62,10 @@ func init() {
 			r.DefineOperationFind(nakedType, findParameter, cdrom),
 			// create
 			r.DefineOperationCreate(nakedType, createParam, cdrom).
-				ResponseEnvelope(&schema.EnvelopePayloadDesc{ // TODO エンベロープとResultを同時に定義できないか?
-					PayloadName: "FTPServer",
+				ResultFromEnvelope(ftpServer, &schema.EnvelopePayloadDesc{
+					PayloadName: ftpServer.Name,
 					PayloadType: meta.Static(naked.OpeningFTPServer{}),
-				}).
-				ResultWithSourceField("FTPServer", ftpServer),
+				}),
 			// read
 			r.DefineOperationRead(nakedType, cdrom),
 			// update

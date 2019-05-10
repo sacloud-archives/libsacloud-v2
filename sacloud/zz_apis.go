@@ -6,6 +6,10 @@ import (
 	"context"
 )
 
+/*************************************************
+* CDROMAPI
+*************************************************/
+
 // CDROMAPI is interface for operate CDROM resource
 type CDROMAPI interface {
 	Find(ctx context.Context, zone string, conditions *FindCondition) ([]*CDROM, error)
@@ -15,6 +19,10 @@ type CDROMAPI interface {
 	Delete(ctx context.Context, zone string, id int64) error
 }
 
+/*************************************************
+* NoteAPI
+*************************************************/
+
 // NoteAPI is interface for operate Note resource
 type NoteAPI interface {
 	Find(ctx context.Context, zone string, conditions *FindCondition) ([]*Note, error)
@@ -23,6 +31,10 @@ type NoteAPI interface {
 	Update(ctx context.Context, zone string, id int64, param *NoteUpdateRequest) (*Note, error)
 	Delete(ctx context.Context, zone string, id int64) error
 }
+
+/*************************************************
+* ZoneAPI
+*************************************************/
 
 // ZoneAPI is interface for operate Zone resource
 type ZoneAPI interface {
