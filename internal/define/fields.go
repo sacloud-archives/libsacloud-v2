@@ -16,6 +16,12 @@ func (f *fieldsDef) ID() *schema.FieldDesc {
 	return &schema.FieldDesc{
 		Name: "ID",
 		Type: meta.TypeID,
+		ExtendAccessors: []*schema.ExtendAccessor{
+			{
+				Name: "StringID",
+				Type: meta.TypeString,
+			},
+		},
 	}
 }
 
@@ -85,6 +91,9 @@ func (f *fieldsDef) SizeMB() *schema.FieldDesc {
 	return &schema.FieldDesc{
 		Name: "SizeMB",
 		Type: meta.TypeInt,
+		ExtendAccessors: []*schema.ExtendAccessor{
+			{Name: "SizeGB"},
+		},
 	}
 }
 

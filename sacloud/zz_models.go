@@ -46,6 +46,16 @@ func (o *CDROM) SetID(v int64) {
 	o.ID = v
 }
 
+// GetStringID gets value to StringID
+func (o *CDROM) GetStringID() string {
+	return getStringID(o)
+}
+
+// SetStringID sets value to StringID
+func (o *CDROM) SetStringID(v string) {
+	setStringID(o, v)
+}
+
 // GetName returns value of Name
 func (o *CDROM) GetName() string {
 	return o.Name
@@ -344,6 +354,16 @@ func (o *CDROMCreateRequest) SetSizeMB(v int) {
 	o.SizeMB = v
 }
 
+// GetSizeGB gets value to SizeGB
+func (o *CDROMCreateRequest) GetSizeGB() int {
+	return getSizeGB(o)
+}
+
+// SetSizeGB sets value to SizeGB
+func (o *CDROMCreateRequest) SetSizeGB(v int) {
+	setSizeGB(o, v)
+}
+
 // GetName returns value of Name
 func (o *CDROMCreateRequest) GetName() string {
 	return o.Name
@@ -521,6 +541,16 @@ func (o *Note) GetID() int64 {
 // SetID sets value to ID
 func (o *Note) SetID(v int64) {
 	o.ID = v
+}
+
+// GetStringID gets value to StringID
+func (o *Note) GetStringID() string {
+	return getStringID(o)
+}
+
+// SetStringID sets value to StringID
+func (o *Note) SetStringID(v string) {
+	setStringID(o, v)
 }
 
 // GetName returns value of Name
@@ -824,6 +854,16 @@ func (o *Zone) GetID() int64 {
 // SetID sets value to ID
 func (o *Zone) SetID(v int64) {
 	o.ID = v
+}
+
+// GetStringID gets value to StringID
+func (o *Zone) GetStringID() string {
+	return getStringID(o)
+}
+
+// SetStringID sets value to StringID
+func (o *Zone) SetStringID(v string) {
+	setStringID(o, v)
 }
 
 // GetName returns value of Name
