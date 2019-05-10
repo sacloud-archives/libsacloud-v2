@@ -135,14 +135,6 @@ func (r *Resource) DefineOperation(name string) *Operation {
 
 // DefineOperationFind Find操作を定義
 func (r *Resource) DefineOperationFind(nakedType meta.Type, findParam, result *Model) *Operation {
-	var findEnvelope []*EnvelopePayloadDesc
-	for _, f := range findParam.Fields {
-		findEnvelope = append(findEnvelope, &EnvelopePayloadDesc{
-			PayloadName: f.Name,
-			PayloadType: f.Type,
-		})
-	}
-
 	if findParam.Name == "" {
 		findParam.Name = "FindCondition"
 	}
@@ -158,9 +150,8 @@ func (r *Resource) DefineOperationFind(nakedType meta.Type, findParam, result *M
 	return r.DefineOperation("Find").
 		Method(http.MethodGet).
 		PathFormat(DefaultPathFormat).
-		RequestEnvelope(findEnvelope...).
 		Argument(ArgumentZone).
-		PassthroughArgument("conditions", findParam).
+		PassthroughArgumentToPayload("conditions", findParam).
 		ResultPluralFromEnvelope(result, &EnvelopePayloadDesc{PayloadType: nakedType})
 }
 

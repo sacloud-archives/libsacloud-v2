@@ -238,7 +238,7 @@ func (o *CDROMOp) Delete(ctx context.Context, zone string, id int64) error {
 
 // OpenFTP is API call
 func (o *CDROMOp) OpenFTP(ctx context.Context, zone string, id int64, openOption *OpenFTPParam) (*FTPServer, error) {
-	url, err := buildURL("{{.rootURL}}/{{.zone}}/{{.pathSuffix}}/{{.pathName}}/{{.id}}/ftp", map[string]interface{}{
+	url, err := buildURL("{{.rootURL}}/{{.zone}}/{{.pathSuffix}}/{{.pathName}}/ftp", map[string]interface{}{
 		"rootURL":    SakuraCloudAPIRoot,
 		"pathSuffix": o.PathSuffix,
 		"pathName":   o.PathName,
@@ -282,7 +282,7 @@ func (o *CDROMOp) OpenFTP(ctx context.Context, zone string, id int64, openOption
 
 // CloseFTP is API call
 func (o *CDROMOp) CloseFTP(ctx context.Context, zone string, id int64) error {
-	url, err := buildURL("{{.rootURL}}/{{.zone}}/{{.pathSuffix}}/{{.pathName}}/{{.id}}/ftp", map[string]interface{}{
+	url, err := buildURL("{{.rootURL}}/{{.zone}}/{{.pathSuffix}}/{{.pathName}}/ftp", map[string]interface{}{
 		"rootURL":    SakuraCloudAPIRoot,
 		"pathSuffix": o.PathSuffix,
 		"pathName":   o.PathName,

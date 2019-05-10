@@ -92,7 +92,7 @@ func init() {
 			// openFTP
 			r.DefineOperation("OpenFTP").
 				Method(http.MethodPut).
-				PathFormat(schema.DefaultPathFormat+"/{{.id}}/ftp").
+				PathFormat(schema.IDAndSuffixPathFormat("ftp")).
 				Argument(schema.ArgumentZone).
 				Argument(schema.ArgumentID).
 				PassthroughArgumentToPayload("openOption", openFTPParam).
@@ -104,7 +104,7 @@ func init() {
 			// closeFTP
 			r.DefineOperation("CloseFTP").
 				Method(http.MethodDelete).
-				PathFormat(schema.DefaultPathFormat+"/{{.id}}/ftp").
+				PathFormat(schema.IDAndSuffixPathFormat("ftp")).
 				Argument(schema.ArgumentZone).
 				Argument(schema.ArgumentID),
 		)
