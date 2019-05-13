@@ -84,7 +84,7 @@ func TestToNaked(t *testing.T) {
 
 	for _, expect := range expects {
 		naked := &dummyNaked{}
-		err := ToNaked(expect.tagged, naked)
+		err := ConvertTo(expect.tagged, naked)
 		require.Equal(t, expect.err, err)
 		if err == nil {
 			require.Equal(t, expect.naked, naked)
@@ -139,11 +139,161 @@ func TestFromNaked(t *testing.T) {
 
 	for _, expect := range expects {
 		tagged := &dummyTagged{}
-		err := FromNaked(expect.naked, tagged)
+		err := ConvertFrom(expect.naked, tagged)
 		require.Equal(t, expect.err, err)
 		if err == nil {
 			require.Equal(t, expect.tagged, tagged)
 		}
 	}
 
+}
+
+type dummySlice struct {
+	Slice []*dummySliceInner `json:",omitempty"`
+}
+
+type dummySliceInner struct {
+	Value string             `json:",omitempty"`
+	Slice []*dummySliceInner `json:",omitempty"`
+}
+
+type dummyExtractInnerSlice struct {
+	Values       []string `json:",omitempty" mapconv:"[]Slice.Value"`
+	NestedValues []string `json:",omitempty" mapconv:"[]Slice.[]Slice.Value"`
+}
+
+func TestExtractInnerSlice(t *testing.T) {
+	expects := []struct {
+		input  *dummySlice
+		expect *dummyExtractInnerSlice
+	}{
+		{
+			input: &dummySlice{
+				Slice: []*dummySliceInner{
+					{Value: "value1"},
+					{Value: "value2"},
+					{
+						Value: "value3",
+						Slice: []*dummySliceInner{
+							{Value: "value4"},
+							{Value: "value5"},
+						},
+					},
+				},
+			},
+			expect: &dummyExtractInnerSlice{
+				Values:       []string{"value1", "value2", "value3"},
+				NestedValues: []string{"value4", "value5"},
+			},
+		},
+	}
+
+	for _, tc := range expects {
+		dest := &dummyExtractInnerSlice{}
+		err := ConvertFrom(tc.input, dest)
+
+		require.NoError(t, err)
+		require.Equal(t, tc.expect, dest)
+	}
+}
+
+func TestInsertInnerSlice(t *testing.T) {
+	expects := []struct {
+		input  *dummyExtractInnerSlice
+		expect *dummySlice
+	}{
+		{
+			input: &dummyExtractInnerSlice{
+				Values:       []string{"value1", "value2", "value3"},
+				NestedValues: []string{"value4", "value5"},
+			},
+			expect: &dummySlice{
+				Slice: []*dummySliceInner{
+					{Value: "value1"},
+					{Value: "value2"},
+					{Value: "value3"},
+					{
+						Slice: []*dummySliceInner{
+							{Value: "value4"},
+						},
+					},
+					{
+						Slice: []*dummySliceInner{
+							{Value: "value5"},
+						},
+					},
+				},
+			},
+		},
+	}
+
+	for _, tc := range expects {
+		dest := &dummySlice{}
+		err := ConvertTo(tc.input, dest)
+
+		require.NoError(t, err)
+		require.Equal(t, tc.expect, dest)
+	}
+}
+
+type hasDefaultSource struct {
+	Field string `mapconv:"Field:default-value"`
+}
+
+type hasDefaultDest struct {
+	Field string
+}
+
+func TestDefaultValue(t *testing.T) {
+	expects := []struct {
+		input  *hasDefaultSource
+		expect *hasDefaultDest
+	}{
+		{
+			input: &hasDefaultSource{},
+			expect: &hasDefaultDest{
+				Field: "default-value",
+			},
+		},
+	}
+
+	for _, tc := range expects {
+		dest := &hasDefaultDest{}
+		err := ConvertTo(tc.input, dest)
+		require.NoError(t, err)
+		require.Equal(t, tc.expect, dest)
+	}
+}
+
+type multipleSource struct {
+	Field string `mapconv:"Field1,Field2"`
+}
+
+type multipleDest struct {
+	Field1 string
+	Field2 string
+}
+
+func TestMultipleDestination(t *testing.T) {
+	expects := []struct {
+		input  *multipleSource
+		expect *multipleDest
+	}{
+		{
+			input: &multipleSource{
+				Field: "value",
+			},
+			expect: &multipleDest{
+				Field1: "value",
+				Field2: "value",
+			},
+		},
+	}
+
+	for _, tc := range expects {
+		dest := &multipleDest{}
+		err := ConvertTo(tc.input, dest)
+		require.NoError(t, err)
+		require.Equal(t, tc.expect, dest)
+	}
 }

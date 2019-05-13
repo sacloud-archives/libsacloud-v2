@@ -55,16 +55,17 @@ func (o *{{ .Name}}) Validate() error {
 
 {{- $struct := .Name -}}
 {{- range .Fields }} {{ $name := .Name }}{{ $typeName := .TypeName }}
-{{- if not .SuppressAccessorGen }}
 // Get{{$name}} returns value of {{$name}} 
 func (o *{{ $struct }}) Get{{$name}}() {{$typeName}} {
 	return o.{{$name}}
 }
 
+{{- if not .ReadOnly}}
 // Set{{$name}} sets value to {{$name}} 
 func (o *{{ $struct }}) Set{{$name}}(v {{$typeName}}) {
 	o.{{$name}} = v
 }
+{{- end }}
 
 {{ range .ExtendAccessors }}
 {{ if not .AvoidGetter }}
@@ -81,20 +82,19 @@ func (o *{{ $struct }}) Set{{.Name}}(v {{ if .HasType }}{{ .TypeName }}{{ else }
 }
 {{- end }} {{/* end of if not .AvoidSetter */}}
 {{- end }} {{/* end of range .ExtendAccessors */}}
-{{- end }} {{/* end of if not .SuppressAccessorGen */}}
 {{- end }} {{/* end of range .Fields */}}
 
 {{- if .HasNakedType }}
-// toNaked returns naked {{.Name}} 
-func (o *{{ .Name }}) toNaked() ({{.NakedType.GoTypeSourceCode}}, error) {
+// convertTo returns naked {{.Name}} 
+func (o *{{ .Name }}) convertTo() ({{.NakedType.GoTypeSourceCode}}, error) {
 	dest := {{.NakedType.ZeroInitializeSourceCode}}
-	err := mapconv.ToNaked(o, dest)
+	err := mapconv.ConvertTo(o, dest)
 	return dest, err
 }
 
-// parseNaked parse values from naked {{.Name}}
-func (o *{{ .Name }}) parseNaked(naked {{.NakedType.GoTypeSourceCode}}) error {
-	return mapconv.FromNaked(naked, o)
+// convertFrom parse values from naked {{.Name}}
+func (o *{{ .Name }}) convertFrom(naked {{.NakedType.GoTypeSourceCode}}) error {
+	return mapconv.ConvertFrom(naked, o)
 }
 
 {{- end }} {{/* end of if .HasNakedType  */}}

@@ -1,9 +1,35 @@
 package sacloud
 
-import (
-	"fmt"
-	"strconv"
-)
+import "github.com/sacloud/libsacloud-v2/sacloud/types"
+
+/************************************************
+ ID - StringID
+************************************************/
+
+type idAccessor interface {
+	GetID() types.ID
+	SetID(id types.ID)
+}
+
+func getStringID(target idAccessor) string {
+	return target.GetID().String()
+}
+
+func setStringID(target idAccessor, id string) {
+	target.SetID(types.StringID(id))
+}
+
+func getInt64ID(target idAccessor) int64 {
+	return target.GetID().Int64()
+}
+
+func setInt64ID(target idAccessor, id int64) {
+	target.SetID(types.ID(id))
+}
+
+/************************************************
+ SizeMB - SizeGB
+************************************************/
 
 type sizeMBAccessor interface {
 	GetSizeMB() int
@@ -20,18 +46,4 @@ func getSizeGB(target sizeMBAccessor) int {
 
 func setSizeGB(target sizeMBAccessor, size int) {
 	target.SetSizeMB(size * 1024)
-}
-
-type idAccessor interface {
-	GetID() int64
-	SetID(id int64)
-}
-
-func getStringID(target idAccessor) string {
-	return fmt.Sprintf("%d", target.GetID())
-}
-
-func setStringID(target idAccessor, id string) {
-	intID, _ := strconv.ParseInt(id, 10, 64) // nolint ignore error
-	target.SetID(intID)
 }

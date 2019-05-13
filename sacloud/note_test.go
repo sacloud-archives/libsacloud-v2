@@ -4,6 +4,7 @@ import (
 	"testing"
 
 	"github.com/sacloud/libsacloud-v2/sacloud/naked"
+	"github.com/sacloud/libsacloud-v2/sacloud/types"
 	"github.com/stretchr/testify/require"
 )
 
@@ -34,7 +35,7 @@ func TestNoteUpdateRequest_Validate(t *testing.T) {
 	}
 }
 
-func TestNoteUpdateRequest_toNaked(t *testing.T) {
+func TestNoteUpdateRequest_convertTo(t *testing.T) {
 
 	expects := []struct {
 		model *NoteUpdateRequest
@@ -44,7 +45,7 @@ func TestNoteUpdateRequest_toNaked(t *testing.T) {
 			model: &NoteUpdateRequest{
 				Name:    "test",
 				Tags:    []string{"tag1", "tag2"},
-				IconID:  2,
+				IconID:  types.ID(2),
 				Class:   "shell",
 				Content: "content",
 			},
@@ -52,7 +53,7 @@ func TestNoteUpdateRequest_toNaked(t *testing.T) {
 				Name: "test",
 				Tags: []string{"tag1", "tag2"},
 				Icon: &naked.Icon{
-					ID: 2,
+					ID: types.ID(2),
 				},
 				Class:   "shell",
 				Content: "content",
@@ -61,14 +62,14 @@ func TestNoteUpdateRequest_toNaked(t *testing.T) {
 	}
 
 	for _, expect := range expects {
-		naked, err := expect.model.toNaked()
+		naked, err := expect.model.convertTo()
 		require.NoError(t, err)
 		require.Equal(t, expect.naked, naked)
 	}
 
 }
 
-func TestNoteUpdateRequest_parseNaked(t *testing.T) {
+func TestNoteUpdateRequest_convertFrom(t *testing.T) {
 
 	expects := []struct {
 		model *NoteUpdateRequest
@@ -78,7 +79,7 @@ func TestNoteUpdateRequest_parseNaked(t *testing.T) {
 			model: &NoteUpdateRequest{
 				Name:    "test",
 				Tags:    []string{"tag1", "tag2"},
-				IconID:  2,
+				IconID:  types.ID(2),
 				Class:   "shell",
 				Content: "content",
 			},
@@ -86,7 +87,7 @@ func TestNoteUpdateRequest_parseNaked(t *testing.T) {
 				Name: "test",
 				Tags: []string{"tag1", "tag2"},
 				Icon: &naked.Icon{
-					ID: 2,
+					ID: types.ID(2),
 				},
 				Class:   "shell",
 				Content: "content",
@@ -96,7 +97,7 @@ func TestNoteUpdateRequest_parseNaked(t *testing.T) {
 
 	for _, expect := range expects {
 		model := &NoteUpdateRequest{}
-		err := model.parseNaked(expect.naked)
+		err := model.convertFrom(expect.naked)
 		require.NoError(t, err)
 		require.Equal(t, expect.model, model)
 	}
