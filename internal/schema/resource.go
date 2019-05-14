@@ -353,6 +353,20 @@ func (r *Resource) OperationCRUD(nakedType meta.Type, findParam, createParam, up
 	return r
 }
 
+// DefineOperationConfig Config操作を定義
+func (r *Resource) DefineOperationConfig() *Operation {
+	return r.DefineOperation("Config").
+		Method(http.MethodPut).
+		PathFormat(IDAndSuffixPathFormat("config")).
+		Argument(ArgumentZone).
+		Argument(ArgumentID)
+}
+
+// OperationConfig Config操作を追加
+func (r *Resource) OperationConfig() *Resource {
+	return r.Operation(r.DefineOperationConfig())
+}
+
 // OperationBoot リソースに対するBoot操作を追加
 func (r *Resource) OperationBoot() *Resource {
 	return r.Operation(r.DefineOperationBoot())
@@ -419,6 +433,26 @@ func (r *Resource) OperationPowerManagement() *Resource {
 		r.DefineOperationPowerManagement()...,
 	)
 	return r
+}
+
+// DefineOperationStatus ステータス取得操作を定義
+func (r *Resource) DefineOperationStatus(nakedType meta.Type, result *Model) *Operation {
+	return r.DefineOperation("Status").
+		Method(http.MethodGet).
+		PathFormat(IDAndSuffixPathFormat("status")).
+		Argument(ArgumentZone).
+		Argument(ArgumentID).
+		ResultPluralFromEnvelope(result, &EnvelopePayloadDesc{
+			PayloadType: meta.Static(naked.LoadBalancerStatus{}),
+			PayloadName: r.FieldName(PayloadForms.Singular),
+		})
+}
+
+// OperationStatus ステータス取得操作を追加
+func (r *Resource) OperationStatus(nakedType meta.Type, result *Model) *Resource {
+	return r.Operation(
+		r.DefineOperationStatus(nakedType, result),
+	)
 }
 
 // DefineOperationMonitor アクティビティモニタ取得操作を定義
