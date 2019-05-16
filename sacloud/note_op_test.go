@@ -9,7 +9,7 @@ import (
 )
 
 func TestNoteOpCRUD(t *testing.T) {
-	Test(t, &CRUDTestCase{
+	Run(t, &CRUDTestCase{
 		Parallel: true,
 
 		SetupAPICaller: singletonAPICaller,
@@ -91,7 +91,7 @@ func testNoteDelete(testContext *CRUDTestContext, caller APICaller) error {
 	return client.Delete(context.Background(), DefaultZone, testContext.ID)
 }
 
-func TestFindNote(t *testing.T) {
+func TestNoteOp_Find(t *testing.T) {
 	if !isAccTest() {
 		t.Skip("TESTACC is not set. skip")
 	}

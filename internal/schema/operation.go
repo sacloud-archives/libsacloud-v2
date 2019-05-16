@@ -62,16 +62,16 @@ func (o *Operation) MappableArgument(name string, model *Model) *Operation {
 	})
 }
 
-// PassthroughArgument 引数定義の追加
-func (o *Operation) PassthroughArgument(name string, model *Model) *Operation {
-	return o.Argument(&PassthroughArgument{
+// PassthroughModelArgument 引数定義の追加
+func (o *Operation) PassthroughModelArgument(name string, model *Model) *Operation {
+	return o.Argument(&PassthroughModelArgument{
 		Name:  name,
 		Model: model,
 	})
 }
 
-// PassthroughArgumentToPayload 引数定義の追加、ペイロードの定義も同時に行われる
-func (o *Operation) PassthroughArgumentToPayload(name string, model *Model) *Operation {
+// PassthroughModelArgumentWithEnvelope 引数定義の追加、ペイロードの定義も同時に行われる
+func (o *Operation) PassthroughModelArgumentWithEnvelope(name string, model *Model) *Operation {
 	var descs []*EnvelopePayloadDesc
 	for _, field := range model.Fields {
 		descs = append(descs, &EnvelopePayloadDesc{
@@ -80,10 +80,21 @@ func (o *Operation) PassthroughArgumentToPayload(name string, model *Model) *Ope
 		})
 	}
 	o.RequestEnvelope(descs...)
-	return o.Argument(&PassthroughArgument{
+	return o.Argument(&PassthroughModelArgument{
 		Name:  name,
 		Model: model,
 	})
+}
+
+// PassthroughSimpleArgumentWithEnvelope 引数定義の追加、ペイロードの定義も同時に行われる
+func (o *Operation) PassthroughSimpleArgumentWithEnvelope(arg *PassthroughSimpleArgument) *Operation {
+	desc := &EnvelopePayloadDesc{
+		PayloadName: arg.Destination,
+		PayloadType: arg.Type,
+	}
+	o.RequestEnvelope(desc)
+
+	return o.Argument(arg)
 }
 
 // Arguments 引数定義の追加(複数)
@@ -236,6 +247,16 @@ func (o *Operation) HasPassthroughFieldDecider() bool {
 // PassthroughFieldDeciders Argumentsのうち、PassthroughFieldDeciderであるもののリストを返す
 func (o *Operation) PassthroughFieldDeciders() []PassthroughFieldDecider {
 	return o.arguments.PassthroughFieldDeciders()
+}
+
+// HasPassthroughSimpleFieldDecider エンベロープへのパラメータマッピングを行う必要のなる引数を持つか
+func (o *Operation) HasPassthroughSimpleFieldDecider() bool {
+	return len(o.arguments.PassthroughSimpleFieldDeciders()) > 0
+}
+
+// PassthroughSimpleFieldDeciders Argumentsのうち、PassthroughSimpleFieldDeciderであるもののリストを返す
+func (o *Operation) PassthroughSimpleFieldDeciders() []PassthroughSimpleFieldDecider {
+	return o.arguments.PassthroughSimpleFieldDeciders()
 }
 
 // RequestEnvelopeStructName エンベロープのstruct名

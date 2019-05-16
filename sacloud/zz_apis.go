@@ -9,6 +9,22 @@ import (
 )
 
 /*************************************************
+* ArchiveAPI
+*************************************************/
+
+// ArchiveAPI is interface for operate Archive resource
+type ArchiveAPI interface {
+	Find(ctx context.Context, zone string, conditions *FindCondition) ([]*Archive, error)
+	Create(ctx context.Context, zone string, param *ArchiveCreateRequest) (*Archive, error)
+	CreateBlank(ctx context.Context, zone string, param *ArchiveCreateBlankRequest) (*Archive, *FTPServer, error)
+	Read(ctx context.Context, zone string, id types.ID) (*Archive, error)
+	Update(ctx context.Context, zone string, id types.ID, param *ArchiveUpdateRequest) (*Archive, error)
+	Delete(ctx context.Context, zone string, id types.ID) error
+	OpenFTP(ctx context.Context, zone string, id types.ID, openOption *OpenFTPRequest) (*FTPServer, error)
+	CloseFTP(ctx context.Context, zone string, id types.ID) error
+}
+
+/*************************************************
 * CDROMAPI
 *************************************************/
 
@@ -19,8 +35,32 @@ type CDROMAPI interface {
 	Read(ctx context.Context, zone string, id types.ID) (*CDROM, error)
 	Update(ctx context.Context, zone string, id types.ID, param *CDROMUpdateRequest) (*CDROM, error)
 	Delete(ctx context.Context, zone string, id types.ID) error
-	OpenFTP(ctx context.Context, zone string, id types.ID, openOption *OpenFTPParam) (*FTPServer, error)
+	OpenFTP(ctx context.Context, zone string, id types.ID, openOption *OpenFTPRequest) (*FTPServer, error)
 	CloseFTP(ctx context.Context, zone string, id types.ID) error
+}
+
+/*************************************************
+* DiskAPI
+*************************************************/
+
+// DiskAPI is interface for operate Disk resource
+type DiskAPI interface {
+	Find(ctx context.Context, zone string, conditions *FindCondition) ([]*Disk, error)
+	Create(ctx context.Context, zone string, param *DiskCreateRequest) (*Disk, error)
+	CreateDistantly(ctx context.Context, zone string, createParam *DiskCreateRequest, distantFrom []types.ID) (*Disk, error)
+	Config(ctx context.Context, zone string, id types.ID, edit *DiskEditRequest) error
+	CreateWithConfig(ctx context.Context, zone string, createParam *DiskCreateRequest, editParam *DiskEditRequest, bootAtAvailable bool) (*Disk, error)
+	CreateWithConfigDistantly(ctx context.Context, zone string, createParam *DiskCreateRequest, editParam *DiskEditRequest, bootAtAvailable bool, distantFrom []types.ID) (*Disk, error)
+	ToBlank(ctx context.Context, zone string, id types.ID) error
+	ResizePartition(ctx context.Context, zone string, id types.ID) error
+	ConnectToServer(ctx context.Context, zone string, id types.ID, serverID types.ID) error
+	DisconnectFromServer(ctx context.Context, zone string, id types.ID) error
+	Install(ctx context.Context, zone string, id types.ID, installParam *DiskInstallRequest, distantFrom []types.ID) (*Disk, error)
+	InstallDistantFrom(ctx context.Context, zone string, id types.ID, installParam *DiskInstallRequest) (*Disk, error)
+	Read(ctx context.Context, zone string, id types.ID) (*Disk, error)
+	Update(ctx context.Context, zone string, id types.ID, param *DiskUpdateRequest) (*Disk, error)
+	Delete(ctx context.Context, zone string, id types.ID) error
+	Monitor(ctx context.Context, zone string, id types.ID, condition *MonitorCondition) (*DiskActivity, error)
 }
 
 /*************************************************
@@ -84,6 +124,26 @@ type NoteAPI interface {
 	Read(ctx context.Context, zone string, id types.ID) (*Note, error)
 	Update(ctx context.Context, zone string, id types.ID, param *NoteUpdateRequest) (*Note, error)
 	Delete(ctx context.Context, zone string, id types.ID) error
+}
+
+/*************************************************
+* ServerAPI
+*************************************************/
+
+// ServerAPI is interface for operate Server resource
+type ServerAPI interface {
+	Find(ctx context.Context, zone string, conditions *FindCondition) ([]*Server, error)
+	Create(ctx context.Context, zone string, param *ServerCreateRequest) (*Server, error)
+	Read(ctx context.Context, zone string, id types.ID) (*Server, error)
+	Update(ctx context.Context, zone string, id types.ID, param *ServerUpdateRequest) (*Server, error)
+	Delete(ctx context.Context, zone string, id types.ID) error
+	ChangePlan(ctx context.Context, zone string, id types.ID, plan *ServerChangePlanRequest) (*Server, error)
+	InsertCDROM(ctx context.Context, zone string, id types.ID, insertParam *InsertCDROMRequest) error
+	EjectCDROM(ctx context.Context, zone string, id types.ID, insertParam *EjectCDROMRequest) error
+	Boot(ctx context.Context, zone string, id types.ID) error
+	Shutdown(ctx context.Context, zone string, id types.ID, shutdownOption *ShutdownOption) error
+	Reset(ctx context.Context, zone string, id types.ID) error
+	Monitor(ctx context.Context, zone string, id types.ID, condition *MonitorCondition) (*CPUTimeActivity, error)
 }
 
 /*************************************************

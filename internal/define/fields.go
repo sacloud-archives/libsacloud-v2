@@ -37,11 +37,203 @@ func (f *fieldsDef) Name() *schema.FieldDesc {
 	}
 }
 
+func (f *fieldsDef) InterfaceDriver() *schema.FieldDesc {
+	return &schema.FieldDesc{
+		Name: "InterfaceDriver",
+		Type: meta.TypeInterfaceDriver,
+	}
+}
+
+func (f *fieldsDef) DiskPlanID() *schema.FieldDesc {
+	return &schema.FieldDesc{
+		Name: "DiskPlanID",
+		Tags: &schema.FieldTags{
+			MapConv: "Plan.ID",
+		},
+		Type: meta.TypeID,
+	}
+}
+
+func (f *fieldsDef) DiskPlanName() *schema.FieldDesc {
+	return &schema.FieldDesc{
+		Name: "DiskPlanName",
+		Tags: &schema.FieldTags{
+			MapConv: "Plan.Name",
+		},
+		Type: meta.TypeString,
+	}
+}
+
+func (f *fieldsDef) DiskPlanStorageClass() *schema.FieldDesc {
+	return &schema.FieldDesc{
+		Name: "DiskPlanStorageClass",
+		Tags: &schema.FieldTags{
+			MapConv: "Plan.StorageClass",
+		},
+		Type: meta.TypeStringFlag,
+	}
+}
+
+// TODO CPUとServerPlanCPUのようにmapconvのタグだけ違う値をどう扱うか
+
+func (f *fieldsDef) CPU() *schema.FieldDesc {
+	return &schema.FieldDesc{
+		Name: "CPU",
+		Type: meta.TypeInt,
+	}
+}
+
+func (f *fieldsDef) MemoryMB() *schema.FieldDesc {
+	return &schema.FieldDesc{
+		Name: "MemoryMB",
+		Type: meta.TypeInt,
+		ExtendAccessors: []*schema.ExtendAccessor{
+			{
+				Name: "MemoryGB",
+				Type: meta.TypeInt,
+			},
+		},
+	}
+}
+
+func (f *fieldsDef) Generation() *schema.FieldDesc {
+	return &schema.FieldDesc{
+		Name: "ServerPlanGeneration",
+		Type: meta.TypePlanGeneration,
+	}
+}
+
+func (f *fieldsDef) ServerPlanID() *schema.FieldDesc {
+	return &schema.FieldDesc{
+		Name: "ServerPlanID",
+		Tags: &schema.FieldTags{
+			MapConv: "ServerPlan.ID",
+		},
+		Type: meta.TypeID,
+	}
+}
+
+func (f *fieldsDef) ServerPlanName() *schema.FieldDesc {
+	return &schema.FieldDesc{
+		Name: "ServerPlanName",
+		Tags: &schema.FieldTags{
+			MapConv: "ServerPlan.Name",
+		},
+		Type: meta.TypeString,
+	}
+}
+
+func (f *fieldsDef) ServerPlanCPU() *schema.FieldDesc {
+	return &schema.FieldDesc{
+		Name: "CPU",
+		Tags: &schema.FieldTags{
+			MapConv: "ServerPlan.CPU",
+		},
+		Type: meta.TypeInt,
+	}
+}
+
+func (f *fieldsDef) ServerPlanMemoryMB() *schema.FieldDesc {
+	return &schema.FieldDesc{
+		Name: "MemoryMB",
+		Tags: &schema.FieldTags{
+			MapConv: "ServerPlan.MemoryMB",
+		},
+		Type: meta.TypeInt,
+		ExtendAccessors: []*schema.ExtendAccessor{
+			{
+				Name: "MemoryGB",
+				Type: meta.TypeInt,
+			},
+		},
+	}
+}
+
+func (f *fieldsDef) ServerPlanGeneration() *schema.FieldDesc {
+	return &schema.FieldDesc{
+		Name: "ServerPlanGeneration",
+		Type: meta.TypePlanGeneration,
+		Tags: &schema.FieldTags{
+			MapConv: "ServerPlan.Generation",
+		},
+	}
+}
+
+func (f *fieldsDef) ServerPlanCommitment() *schema.FieldDesc {
+	return &schema.FieldDesc{
+		Name: "ServerPlanCommitment",
+		Tags: &schema.FieldTags{
+			MapConv: "ServerPlan.Commitment",
+		},
+		Type: meta.TypeString,
+	}
+}
+
 func (f *fieldsDef) PlanID() *schema.FieldDesc {
 	return &schema.FieldDesc{
 		Name: "PlanID",
 		Tags: &schema.FieldTags{
 			MapConv: "Plan.ID",
+		},
+		Type: meta.TypeID,
+	}
+}
+
+func (f *fieldsDef) SourceDiskID() *schema.FieldDesc {
+	return &schema.FieldDesc{
+		Name: "SourceDiskID",
+		Tags: &schema.FieldTags{
+			MapConv: "SourceDisk.ID,omitempty",
+		},
+		Type: meta.TypeID,
+	}
+}
+
+func (f *fieldsDef) SourceDiskAvailability() *schema.FieldDesc {
+	return &schema.FieldDesc{
+		Name: "SourceDiskAvailability",
+		Tags: &schema.FieldTags{
+			MapConv: "SourceDisk.Availability,omitempty",
+		},
+		Type: meta.TypeAvailability,
+	}
+}
+
+func (f *fieldsDef) SourceArchiveID() *schema.FieldDesc {
+	return &schema.FieldDesc{
+		Name: "SourceArchiveID",
+		Tags: &schema.FieldTags{
+			MapConv: "SourceArchive.ID,omitempty",
+		},
+		Type: meta.TypeID,
+	}
+}
+
+func (f *fieldsDef) SourceArchiveAvailability() *schema.FieldDesc {
+	return &schema.FieldDesc{
+		Name: "SourceArchiveAvailability",
+		Tags: &schema.FieldTags{
+			MapConv: "SourceArchive.Availability,omitempty",
+		},
+		Type: meta.TypeAvailability,
+	}
+}
+
+func (f *fieldsDef) OriginalArchiveID() *schema.FieldDesc {
+	return &schema.FieldDesc{
+		Name: "OriginalArchiveID",
+		Tags: &schema.FieldTags{
+			MapConv: "OriginalArchive.ID,omitempty",
+		},
+		Type: meta.TypeID,
+	}
+}
+
+func (f *fieldsDef) ServerID() *schema.FieldDesc {
+	return &schema.FieldDesc{
+		Name: "ServerID",
+		Tags: &schema.FieldTags{
+			MapConv: "Server.ID,omitempty",
 		},
 		Type: meta.TypeID,
 	}
@@ -54,6 +246,26 @@ func (f *fieldsDef) IconID() *schema.FieldDesc {
 			MapConv: "Icon.ID",
 		},
 		Type: meta.TypeID,
+	}
+}
+
+func (f *fieldsDef) PrivateHostID() *schema.FieldDesc {
+	return &schema.FieldDesc{
+		Name: "PrivateHostID",
+		Type: meta.TypeID,
+		Tags: &schema.FieldTags{
+			MapConv: "PrivateHost.ID",
+		},
+	}
+}
+
+func (f *fieldsDef) PrivateHostName() *schema.FieldDesc {
+	return &schema.FieldDesc{
+		Name: "PrivateHostName",
+		Type: meta.TypeString,
+		Tags: &schema.FieldTags{
+			MapConv: "PrivateHost.Name",
+		},
 	}
 }
 
@@ -155,9 +367,6 @@ func (f *fieldsDef) LoadBalancerVIP() *schema.FieldDesc {
 							{
 								Name: "Enabled",
 								Type: meta.TypeStringFlag,
-								Tags: &schema.FieldTags{
-									MapConv: ",default=true",
-								},
 							},
 							{
 								Name: "HealthCheckProtocol",
@@ -344,9 +553,6 @@ func (f *fieldsDef) GSLBDestinationServers() *schema.FieldDesc {
 				{
 					Name: "Enabled",
 					Type: meta.TypeStringFlag,
-					Tags: &schema.FieldTags{
-						MapConv: ",default=true",
-					},
 				},
 				{
 					Name: "Weight",
@@ -415,6 +621,17 @@ func (f *fieldsDef) InstanceStatus() *schema.FieldDesc {
 	}
 }
 
+func (f *fieldsDef) InstanceBeforeStatus() *schema.FieldDesc {
+	return &schema.FieldDesc{
+		Name:     "InstanceBeforeStatus",
+		Type:     meta.TypeInstanceStatus,
+		ReadOnly: true,
+		Tags: &schema.FieldTags{
+			MapConv: "Instance.BeforeStatus",
+		},
+	}
+}
+
 func (f *fieldsDef) InstanceStatusChangedAt() *schema.FieldDesc {
 	return &schema.FieldDesc{
 		Name:     "InstanceStatusChangedAt",
@@ -422,6 +639,28 @@ func (f *fieldsDef) InstanceStatusChangedAt() *schema.FieldDesc {
 		ReadOnly: true,
 		Tags: &schema.FieldTags{
 			MapConv: "Instance.StatusChangedAt",
+		},
+	}
+}
+
+func (f *fieldsDef) InstanceWarnings() *schema.FieldDesc {
+	return &schema.FieldDesc{
+		Name:     "InstanceWarnings",
+		Type:     meta.TypeString,
+		ReadOnly: true,
+		Tags: &schema.FieldTags{
+			MapConv: "Instance.Warnings",
+		},
+	}
+}
+
+func (f *fieldsDef) InstanceWarningsValue() *schema.FieldDesc {
+	return &schema.FieldDesc{
+		Name:     "InstanceWarningsValue",
+		Type:     meta.TypeInt,
+		ReadOnly: true,
+		Tags: &schema.FieldTags{
+			MapConv: "Instance.WarningsValue",
 		},
 	}
 }
@@ -472,12 +711,43 @@ func (f *fieldsDef) Scope() *schema.FieldDesc {
 	}
 }
 
+func (f *fieldsDef) DiskConnection() *schema.FieldDesc {
+	return &schema.FieldDesc{
+		Name: "Connection",
+		Type: meta.TypeDiskConnection,
+	}
+}
+
+func (f *fieldsDef) DiskConnectionOrder() *schema.FieldDesc {
+	return &schema.FieldDesc{
+		Name: "ConnectionOrder",
+		Type: meta.TypeInt,
+	}
+}
+
+func (f *fieldsDef) DiskReinstallCount() *schema.FieldDesc {
+	return &schema.FieldDesc{
+		Name: "ReinstallCount",
+		Type: meta.TypeInt,
+	}
+}
+
 func (f *fieldsDef) SizeMB() *schema.FieldDesc {
 	return &schema.FieldDesc{
 		Name: "SizeMB",
 		Type: meta.TypeInt,
 		ExtendAccessors: []*schema.ExtendAccessor{
 			{Name: "SizeGB"},
+		},
+	}
+}
+
+func (f *fieldsDef) MigratedMB() *schema.FieldDesc {
+	return &schema.FieldDesc{
+		Name: "MigratedMB",
+		Type: meta.TypeInt,
+		ExtendAccessors: []*schema.ExtendAccessor{
+			{Name: "MigratedGB"},
 		},
 	}
 }
@@ -584,12 +854,28 @@ func (f *fieldsDef) HostName() *schema.FieldDesc {
 		Type: meta.TypeString,
 	}
 }
+
 func (f *fieldsDef) IPAddress() *schema.FieldDesc {
 	return &schema.FieldDesc{
 		Name: "IPAddress",
 		Type: meta.TypeString,
 	}
 }
+
+func (f *fieldsDef) UserIPAddress() *schema.FieldDesc {
+	return &schema.FieldDesc{
+		Name: "UserIPAddress",
+		Type: meta.TypeString,
+	}
+}
+
+func (f *fieldsDef) MACAddress() *schema.FieldDesc {
+	return &schema.FieldDesc{
+		Name: "MACAddress",
+		Type: meta.TypeString,
+	}
+}
+
 func (f *fieldsDef) User() *schema.FieldDesc {
 	return &schema.FieldDesc{
 		Name: "User",
@@ -600,6 +886,52 @@ func (f *fieldsDef) Password() *schema.FieldDesc {
 	return &schema.FieldDesc{
 		Name: "Password",
 		Type: meta.TypeString,
+	}
+}
+
+func (f *fieldsDef) SourceInfo() *schema.FieldDesc {
+	return &schema.FieldDesc{
+		Name: "SourceInfo",
+		Tags: &schema.FieldTags{
+			MapConv: "SourceInfo,recursive",
+		},
+		Type: &schema.Model{
+			Name: "SourceArchiveInfo",
+			Fields: []*schema.FieldDesc{
+				{
+					Name:     "ID",
+					Type:     meta.TypeID,
+					ReadOnly: true,
+					Tags: &schema.FieldTags{
+						MapConv: "ArchiveUnderZone.ID",
+					},
+				},
+				{
+					Name:     "AccountID",
+					Type:     meta.TypeID,
+					ReadOnly: true,
+					Tags: &schema.FieldTags{
+						MapConv: "ArchiveUnderZone.Account.ID",
+					},
+				},
+				{
+					Name:     "ZoneID",
+					Type:     meta.TypeID,
+					ReadOnly: true,
+					Tags: &schema.FieldTags{
+						MapConv: "ArchiveUnderZone.Zone.ID",
+					},
+				},
+				{
+					Name:     "ZoneName",
+					Type:     meta.TypeString,
+					ReadOnly: true,
+					Tags: &schema.FieldTags{
+						MapConv: "ArchiveUnderZone.Zone.Name",
+					},
+				},
+			},
+		},
 	}
 }
 
@@ -657,6 +989,16 @@ func (f *fieldsDef) Storage() *schema.FieldDesc {
 	return &schema.FieldDesc{
 		Name: "Storage",
 		Type: meta.Static(naked.Storage{}),
+		Tags: &schema.FieldTags{
+			JSON: ",omitempty",
+		},
+	}
+}
+
+func (f *fieldsDef) BundleInfo() *schema.FieldDesc {
+	return &schema.FieldDesc{
+		Name: "BundleInfo",
+		Type: meta.Static(naked.BundleInfo{}),
 		Tags: &schema.FieldTags{
 			JSON: ",omitempty",
 		},

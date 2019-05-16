@@ -10,6 +10,102 @@ import (
 )
 
 /*************************************************
+* ArchiveTracer
+*************************************************/
+
+// ArchiveTracer is for trace ArchiveOp operations
+type ArchiveTracer struct {
+	Internal ArchiveAPI
+}
+
+// NewArchiveTracer creates new ArchiveTracer instance
+func NewArchiveTracer(in ArchiveAPI) *ArchiveTracer {
+	return &ArchiveTracer{
+		Internal: in,
+	}
+}
+
+// Find is API call with trace log
+func (t *ArchiveTracer) Find(ctx context.Context, zone string, conditions *FindCondition) ([]*Archive, error) {
+	log.Println("[TRACE] ArchiveTracer.Find start:	args => [", "zone=", zone, "conditions=", conditions, "]")
+	defer func() {
+		log.Println("[TRACE] ArchiveTracer.Find: end")
+	}()
+
+	return t.Internal.Find(ctx, zone, conditions)
+}
+
+// Create is API call with trace log
+func (t *ArchiveTracer) Create(ctx context.Context, zone string, param *ArchiveCreateRequest) (*Archive, error) {
+	log.Println("[TRACE] ArchiveTracer.Create start:	args => [", "zone=", zone, "param=", param, "]")
+	defer func() {
+		log.Println("[TRACE] ArchiveTracer.Create: end")
+	}()
+
+	return t.Internal.Create(ctx, zone, param)
+}
+
+// CreateBlank is API call with trace log
+func (t *ArchiveTracer) CreateBlank(ctx context.Context, zone string, param *ArchiveCreateBlankRequest) (*Archive, *FTPServer, error) {
+	log.Println("[TRACE] ArchiveTracer.CreateBlank start:	args => [", "zone=", zone, "param=", param, "]")
+	defer func() {
+		log.Println("[TRACE] ArchiveTracer.CreateBlank: end")
+	}()
+
+	return t.Internal.CreateBlank(ctx, zone, param)
+}
+
+// Read is API call with trace log
+func (t *ArchiveTracer) Read(ctx context.Context, zone string, id types.ID) (*Archive, error) {
+	log.Println("[TRACE] ArchiveTracer.Read start:	args => [", "zone=", zone, "id=", id, "]")
+	defer func() {
+		log.Println("[TRACE] ArchiveTracer.Read: end")
+	}()
+
+	return t.Internal.Read(ctx, zone, id)
+}
+
+// Update is API call with trace log
+func (t *ArchiveTracer) Update(ctx context.Context, zone string, id types.ID, param *ArchiveUpdateRequest) (*Archive, error) {
+	log.Println("[TRACE] ArchiveTracer.Update start:	args => [", "zone=", zone, "id=", id, "param=", param, "]")
+	defer func() {
+		log.Println("[TRACE] ArchiveTracer.Update: end")
+	}()
+
+	return t.Internal.Update(ctx, zone, id, param)
+}
+
+// Delete is API call with trace log
+func (t *ArchiveTracer) Delete(ctx context.Context, zone string, id types.ID) error {
+	log.Println("[TRACE] ArchiveTracer.Delete start:	args => [", "zone=", zone, "id=", id, "]")
+	defer func() {
+		log.Println("[TRACE] ArchiveTracer.Delete: end")
+	}()
+
+	return t.Internal.Delete(ctx, zone, id)
+}
+
+// OpenFTP is API call with trace log
+func (t *ArchiveTracer) OpenFTP(ctx context.Context, zone string, id types.ID, openOption *OpenFTPRequest) (*FTPServer, error) {
+	log.Println("[TRACE] ArchiveTracer.OpenFTP start:	args => [", "zone=", zone, "id=", id, "openOption=", openOption, "]")
+	defer func() {
+		log.Println("[TRACE] ArchiveTracer.OpenFTP: end")
+	}()
+
+	return t.Internal.OpenFTP(ctx, zone, id, openOption)
+}
+
+// CloseFTP is API call with trace log
+func (t *ArchiveTracer) CloseFTP(ctx context.Context, zone string, id types.ID) error {
+	log.Println("[TRACE] ArchiveTracer.CloseFTP start:	args => [", "zone=", zone, "id=", id, "]")
+	defer func() {
+		log.Println("[TRACE] ArchiveTracer.CloseFTP: end")
+	}()
+
+	return t.Internal.CloseFTP(ctx, zone, id)
+}
+
+/*************************************************
 * CDROMTracer
 *************************************************/
 
@@ -76,7 +172,7 @@ func (t *CDROMTracer) Delete(ctx context.Context, zone string, id types.ID) erro
 }
 
 // OpenFTP is API call with trace log
-func (t *CDROMTracer) OpenFTP(ctx context.Context, zone string, id types.ID, openOption *OpenFTPParam) (*FTPServer, error) {
+func (t *CDROMTracer) OpenFTP(ctx context.Context, zone string, id types.ID, openOption *OpenFTPRequest) (*FTPServer, error) {
 	log.Println("[TRACE] CDROMTracer.OpenFTP start:	args => [", "zone=", zone, "id=", id, "openOption=", openOption, "]")
 	defer func() {
 		log.Println("[TRACE] CDROMTracer.OpenFTP: end")
@@ -93,6 +189,182 @@ func (t *CDROMTracer) CloseFTP(ctx context.Context, zone string, id types.ID) er
 	}()
 
 	return t.Internal.CloseFTP(ctx, zone, id)
+}
+
+/*************************************************
+* DiskTracer
+*************************************************/
+
+// DiskTracer is for trace DiskOp operations
+type DiskTracer struct {
+	Internal DiskAPI
+}
+
+// NewDiskTracer creates new DiskTracer instance
+func NewDiskTracer(in DiskAPI) *DiskTracer {
+	return &DiskTracer{
+		Internal: in,
+	}
+}
+
+// Find is API call with trace log
+func (t *DiskTracer) Find(ctx context.Context, zone string, conditions *FindCondition) ([]*Disk, error) {
+	log.Println("[TRACE] DiskTracer.Find start:	args => [", "zone=", zone, "conditions=", conditions, "]")
+	defer func() {
+		log.Println("[TRACE] DiskTracer.Find: end")
+	}()
+
+	return t.Internal.Find(ctx, zone, conditions)
+}
+
+// Create is API call with trace log
+func (t *DiskTracer) Create(ctx context.Context, zone string, param *DiskCreateRequest) (*Disk, error) {
+	log.Println("[TRACE] DiskTracer.Create start:	args => [", "zone=", zone, "param=", param, "]")
+	defer func() {
+		log.Println("[TRACE] DiskTracer.Create: end")
+	}()
+
+	return t.Internal.Create(ctx, zone, param)
+}
+
+// CreateDistantly is API call with trace log
+func (t *DiskTracer) CreateDistantly(ctx context.Context, zone string, createParam *DiskCreateRequest, distantFrom []types.ID) (*Disk, error) {
+	log.Println("[TRACE] DiskTracer.CreateDistantly start:	args => [", "zone=", zone, "createParam=", createParam, "distantFrom=", distantFrom, "]")
+	defer func() {
+		log.Println("[TRACE] DiskTracer.CreateDistantly: end")
+	}()
+
+	return t.Internal.CreateDistantly(ctx, zone, createParam, distantFrom)
+}
+
+// Config is API call with trace log
+func (t *DiskTracer) Config(ctx context.Context, zone string, id types.ID, edit *DiskEditRequest) error {
+	log.Println("[TRACE] DiskTracer.Config start:	args => [", "zone=", zone, "id=", id, "edit=", edit, "]")
+	defer func() {
+		log.Println("[TRACE] DiskTracer.Config: end")
+	}()
+
+	return t.Internal.Config(ctx, zone, id, edit)
+}
+
+// CreateWithConfig is API call with trace log
+func (t *DiskTracer) CreateWithConfig(ctx context.Context, zone string, createParam *DiskCreateRequest, editParam *DiskEditRequest, bootAtAvailable bool) (*Disk, error) {
+	log.Println("[TRACE] DiskTracer.CreateWithConfig start:	args => [", "zone=", zone, "createParam=", createParam, "editParam=", editParam, "bootAtAvailable=", bootAtAvailable, "]")
+	defer func() {
+		log.Println("[TRACE] DiskTracer.CreateWithConfig: end")
+	}()
+
+	return t.Internal.CreateWithConfig(ctx, zone, createParam, editParam, bootAtAvailable)
+}
+
+// CreateWithConfigDistantly is API call with trace log
+func (t *DiskTracer) CreateWithConfigDistantly(ctx context.Context, zone string, createParam *DiskCreateRequest, editParam *DiskEditRequest, bootAtAvailable bool, distantFrom []types.ID) (*Disk, error) {
+	log.Println("[TRACE] DiskTracer.CreateWithConfigDistantly start:	args => [", "zone=", zone, "createParam=", createParam, "editParam=", editParam, "bootAtAvailable=", bootAtAvailable, "distantFrom=", distantFrom, "]")
+	defer func() {
+		log.Println("[TRACE] DiskTracer.CreateWithConfigDistantly: end")
+	}()
+
+	return t.Internal.CreateWithConfigDistantly(ctx, zone, createParam, editParam, bootAtAvailable, distantFrom)
+}
+
+// ToBlank is API call with trace log
+func (t *DiskTracer) ToBlank(ctx context.Context, zone string, id types.ID) error {
+	log.Println("[TRACE] DiskTracer.ToBlank start:	args => [", "zone=", zone, "id=", id, "]")
+	defer func() {
+		log.Println("[TRACE] DiskTracer.ToBlank: end")
+	}()
+
+	return t.Internal.ToBlank(ctx, zone, id)
+}
+
+// ResizePartition is API call with trace log
+func (t *DiskTracer) ResizePartition(ctx context.Context, zone string, id types.ID) error {
+	log.Println("[TRACE] DiskTracer.ResizePartition start:	args => [", "zone=", zone, "id=", id, "]")
+	defer func() {
+		log.Println("[TRACE] DiskTracer.ResizePartition: end")
+	}()
+
+	return t.Internal.ResizePartition(ctx, zone, id)
+}
+
+// ConnectToServer is API call with trace log
+func (t *DiskTracer) ConnectToServer(ctx context.Context, zone string, id types.ID, serverID types.ID) error {
+	log.Println("[TRACE] DiskTracer.ConnectToServer start:	args => [", "zone=", zone, "id=", id, "serverID=", serverID, "]")
+	defer func() {
+		log.Println("[TRACE] DiskTracer.ConnectToServer: end")
+	}()
+
+	return t.Internal.ConnectToServer(ctx, zone, id, serverID)
+}
+
+// DisconnectFromServer is API call with trace log
+func (t *DiskTracer) DisconnectFromServer(ctx context.Context, zone string, id types.ID) error {
+	log.Println("[TRACE] DiskTracer.DisconnectFromServer start:	args => [", "zone=", zone, "id=", id, "]")
+	defer func() {
+		log.Println("[TRACE] DiskTracer.DisconnectFromServer: end")
+	}()
+
+	return t.Internal.DisconnectFromServer(ctx, zone, id)
+}
+
+// Install is API call with trace log
+func (t *DiskTracer) Install(ctx context.Context, zone string, id types.ID, installParam *DiskInstallRequest, distantFrom []types.ID) (*Disk, error) {
+	log.Println("[TRACE] DiskTracer.Install start:	args => [", "zone=", zone, "id=", id, "installParam=", installParam, "distantFrom=", distantFrom, "]")
+	defer func() {
+		log.Println("[TRACE] DiskTracer.Install: end")
+	}()
+
+	return t.Internal.Install(ctx, zone, id, installParam, distantFrom)
+}
+
+// InstallDistantFrom is API call with trace log
+func (t *DiskTracer) InstallDistantFrom(ctx context.Context, zone string, id types.ID, installParam *DiskInstallRequest) (*Disk, error) {
+	log.Println("[TRACE] DiskTracer.InstallDistantFrom start:	args => [", "zone=", zone, "id=", id, "installParam=", installParam, "]")
+	defer func() {
+		log.Println("[TRACE] DiskTracer.InstallDistantFrom: end")
+	}()
+
+	return t.Internal.InstallDistantFrom(ctx, zone, id, installParam)
+}
+
+// Read is API call with trace log
+func (t *DiskTracer) Read(ctx context.Context, zone string, id types.ID) (*Disk, error) {
+	log.Println("[TRACE] DiskTracer.Read start:	args => [", "zone=", zone, "id=", id, "]")
+	defer func() {
+		log.Println("[TRACE] DiskTracer.Read: end")
+	}()
+
+	return t.Internal.Read(ctx, zone, id)
+}
+
+// Update is API call with trace log
+func (t *DiskTracer) Update(ctx context.Context, zone string, id types.ID, param *DiskUpdateRequest) (*Disk, error) {
+	log.Println("[TRACE] DiskTracer.Update start:	args => [", "zone=", zone, "id=", id, "param=", param, "]")
+	defer func() {
+		log.Println("[TRACE] DiskTracer.Update: end")
+	}()
+
+	return t.Internal.Update(ctx, zone, id, param)
+}
+
+// Delete is API call with trace log
+func (t *DiskTracer) Delete(ctx context.Context, zone string, id types.ID) error {
+	log.Println("[TRACE] DiskTracer.Delete start:	args => [", "zone=", zone, "id=", id, "]")
+	defer func() {
+		log.Println("[TRACE] DiskTracer.Delete: end")
+	}()
+
+	return t.Internal.Delete(ctx, zone, id)
+}
+
+// Monitor is API call with trace log
+func (t *DiskTracer) Monitor(ctx context.Context, zone string, id types.ID, condition *MonitorCondition) (*DiskActivity, error) {
+	log.Println("[TRACE] DiskTracer.Monitor start:	args => [", "zone=", zone, "id=", id, "condition=", condition, "]")
+	defer func() {
+		log.Println("[TRACE] DiskTracer.Monitor: end")
+	}()
+
+	return t.Internal.Monitor(ctx, zone, id, condition)
 }
 
 /*************************************************
@@ -467,6 +739,142 @@ func (t *NoteTracer) Delete(ctx context.Context, zone string, id types.ID) error
 	}()
 
 	return t.Internal.Delete(ctx, zone, id)
+}
+
+/*************************************************
+* ServerTracer
+*************************************************/
+
+// ServerTracer is for trace ServerOp operations
+type ServerTracer struct {
+	Internal ServerAPI
+}
+
+// NewServerTracer creates new ServerTracer instance
+func NewServerTracer(in ServerAPI) *ServerTracer {
+	return &ServerTracer{
+		Internal: in,
+	}
+}
+
+// Find is API call with trace log
+func (t *ServerTracer) Find(ctx context.Context, zone string, conditions *FindCondition) ([]*Server, error) {
+	log.Println("[TRACE] ServerTracer.Find start:	args => [", "zone=", zone, "conditions=", conditions, "]")
+	defer func() {
+		log.Println("[TRACE] ServerTracer.Find: end")
+	}()
+
+	return t.Internal.Find(ctx, zone, conditions)
+}
+
+// Create is API call with trace log
+func (t *ServerTracer) Create(ctx context.Context, zone string, param *ServerCreateRequest) (*Server, error) {
+	log.Println("[TRACE] ServerTracer.Create start:	args => [", "zone=", zone, "param=", param, "]")
+	defer func() {
+		log.Println("[TRACE] ServerTracer.Create: end")
+	}()
+
+	return t.Internal.Create(ctx, zone, param)
+}
+
+// Read is API call with trace log
+func (t *ServerTracer) Read(ctx context.Context, zone string, id types.ID) (*Server, error) {
+	log.Println("[TRACE] ServerTracer.Read start:	args => [", "zone=", zone, "id=", id, "]")
+	defer func() {
+		log.Println("[TRACE] ServerTracer.Read: end")
+	}()
+
+	return t.Internal.Read(ctx, zone, id)
+}
+
+// Update is API call with trace log
+func (t *ServerTracer) Update(ctx context.Context, zone string, id types.ID, param *ServerUpdateRequest) (*Server, error) {
+	log.Println("[TRACE] ServerTracer.Update start:	args => [", "zone=", zone, "id=", id, "param=", param, "]")
+	defer func() {
+		log.Println("[TRACE] ServerTracer.Update: end")
+	}()
+
+	return t.Internal.Update(ctx, zone, id, param)
+}
+
+// Delete is API call with trace log
+func (t *ServerTracer) Delete(ctx context.Context, zone string, id types.ID) error {
+	log.Println("[TRACE] ServerTracer.Delete start:	args => [", "zone=", zone, "id=", id, "]")
+	defer func() {
+		log.Println("[TRACE] ServerTracer.Delete: end")
+	}()
+
+	return t.Internal.Delete(ctx, zone, id)
+}
+
+// ChangePlan is API call with trace log
+func (t *ServerTracer) ChangePlan(ctx context.Context, zone string, id types.ID, plan *ServerChangePlanRequest) (*Server, error) {
+	log.Println("[TRACE] ServerTracer.ChangePlan start:	args => [", "zone=", zone, "id=", id, "plan=", plan, "]")
+	defer func() {
+		log.Println("[TRACE] ServerTracer.ChangePlan: end")
+	}()
+
+	return t.Internal.ChangePlan(ctx, zone, id, plan)
+}
+
+// InsertCDROM is API call with trace log
+func (t *ServerTracer) InsertCDROM(ctx context.Context, zone string, id types.ID, insertParam *InsertCDROMRequest) error {
+	log.Println("[TRACE] ServerTracer.InsertCDROM start:	args => [", "zone=", zone, "id=", id, "insertParam=", insertParam, "]")
+	defer func() {
+		log.Println("[TRACE] ServerTracer.InsertCDROM: end")
+	}()
+
+	return t.Internal.InsertCDROM(ctx, zone, id, insertParam)
+}
+
+// EjectCDROM is API call with trace log
+func (t *ServerTracer) EjectCDROM(ctx context.Context, zone string, id types.ID, insertParam *EjectCDROMRequest) error {
+	log.Println("[TRACE] ServerTracer.EjectCDROM start:	args => [", "zone=", zone, "id=", id, "insertParam=", insertParam, "]")
+	defer func() {
+		log.Println("[TRACE] ServerTracer.EjectCDROM: end")
+	}()
+
+	return t.Internal.EjectCDROM(ctx, zone, id, insertParam)
+}
+
+// Boot is API call with trace log
+func (t *ServerTracer) Boot(ctx context.Context, zone string, id types.ID) error {
+	log.Println("[TRACE] ServerTracer.Boot start:	args => [", "zone=", zone, "id=", id, "]")
+	defer func() {
+		log.Println("[TRACE] ServerTracer.Boot: end")
+	}()
+
+	return t.Internal.Boot(ctx, zone, id)
+}
+
+// Shutdown is API call with trace log
+func (t *ServerTracer) Shutdown(ctx context.Context, zone string, id types.ID, shutdownOption *ShutdownOption) error {
+	log.Println("[TRACE] ServerTracer.Shutdown start:	args => [", "zone=", zone, "id=", id, "shutdownOption=", shutdownOption, "]")
+	defer func() {
+		log.Println("[TRACE] ServerTracer.Shutdown: end")
+	}()
+
+	return t.Internal.Shutdown(ctx, zone, id, shutdownOption)
+}
+
+// Reset is API call with trace log
+func (t *ServerTracer) Reset(ctx context.Context, zone string, id types.ID) error {
+	log.Println("[TRACE] ServerTracer.Reset start:	args => [", "zone=", zone, "id=", id, "]")
+	defer func() {
+		log.Println("[TRACE] ServerTracer.Reset: end")
+	}()
+
+	return t.Internal.Reset(ctx, zone, id)
+}
+
+// Monitor is API call with trace log
+func (t *ServerTracer) Monitor(ctx context.Context, zone string, id types.ID, condition *MonitorCondition) (*CPUTimeActivity, error) {
+	log.Println("[TRACE] ServerTracer.Monitor start:	args => [", "zone=", zone, "id=", id, "condition=", condition, "]")
+	defer func() {
+		log.Println("[TRACE] ServerTracer.Monitor: end")
+	}()
+
+	return t.Internal.Monitor(ctx, zone, id, condition)
 }
 
 /*************************************************

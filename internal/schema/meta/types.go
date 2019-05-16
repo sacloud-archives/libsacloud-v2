@@ -29,10 +29,17 @@ var (
 	TypeInt64Slice = Static([]int64{})
 	// TypeTime Time型
 	TypeTime = Static(time.Time{})
+
 	// TypeAvailability 有効状態
 	TypeAvailability = Static(types.EAvailability(""))
+	// TypePlanGeneration プラン世代
+	TypePlanGeneration = Static(types.EPlanGeneration(0))
 	// TypeInstanceStatus インスタンスステータス
 	TypeInstanceStatus = Static(types.EServerInstanceStatus(""))
+	// TypeInterfaceDriver インターフェースドライバ
+	TypeInterfaceDriver = Static(types.EInterfaceDriver(""))
 	// TypeScope スコープ
 	TypeScope = Static(types.EScope(""))
+	// TypeDiskConnection ディスク接続方法
+	TypeDiskConnection = Static(types.EDiskConnection(""))
 )

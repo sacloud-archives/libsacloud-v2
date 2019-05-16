@@ -6,7 +6,7 @@ import (
 )
 
 func TestSwitchOpCRUD(t *testing.T) {
-	Test(t, &CRUDTestCase{
+	Run(t, &CRUDTestCase{
 		Parallel: true,
 
 		SetupAPICaller: singletonAPICaller,
@@ -43,7 +43,7 @@ var (
 		"Icon",
 		"CreatedAt",
 		"ModifiedAt",
-		"UserSubnet",
+		"Zone",
 	}
 	createSwitchParam = &SwitchCreateRequest{
 		Name:           "libsacloud-v2-switch",

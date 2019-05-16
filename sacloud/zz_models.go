@@ -12,6 +12,783 @@ import (
 )
 
 /*************************************************
+* Archive
+*************************************************/
+
+// Archive represents API parameter/response structure
+type Archive struct {
+	ID                        types.ID
+	Name                      string `validate:"required"`
+	Description               string `validate:"min=0,max=512"`
+	Tags                      []string
+	DisplayOrder              int
+	Availability              types.EAvailability
+	Scope                     types.EScope
+	SizeMB                    int
+	MigratedMB                int
+	DiskPlanID                types.ID            `mapconv:"Plan.ID"`
+	DiskPlanName              string              `mapconv:"Plan.Name"`
+	DiskPlanStorageClass      types.StringFlag    `mapconv:"Plan.StorageClass"`
+	SourceDiskID              types.ID            `mapconv:"SourceDisk.ID,omitempty"`
+	SourceDiskAvailability    types.EAvailability `mapconv:"SourceDisk.Availability,omitempty"`
+	SourceArchiveID           types.ID            `mapconv:"SourceArchive.ID,omitempty"`
+	SourceArchiveAvailability types.EAvailability `mapconv:"SourceArchive.Availability,omitempty"`
+	BundleInfo                *naked.BundleInfo   `json:",omitempty"`
+	Storage                   *naked.Storage      `json:",omitempty"`
+	Icon                      *naked.Icon         `json:",omitempty"`
+	CreatedAt                 *time.Time
+	ModifiedAt                *time.Time
+	OriginalArchiveID         types.ID           `mapconv:"OriginalArchive.ID,omitempty"`
+	SourceInfo                *SourceArchiveInfo `mapconv:"SourceInfo,recursive"`
+}
+
+// Validate validates by field tags
+func (o *Archive) Validate() error {
+	return validator.New().Struct(o)
+}
+
+// GetID returns value of ID
+func (o *Archive) GetID() types.ID {
+	return o.ID
+}
+
+// SetID sets value to ID
+func (o *Archive) SetID(v types.ID) {
+	o.ID = v
+}
+
+// GetStringID gets value to StringID
+func (o *Archive) GetStringID() string {
+	return getStringID(o)
+}
+
+// SetStringID sets value to StringID
+func (o *Archive) SetStringID(v string) {
+	setStringID(o, v)
+}
+
+// GetInt64ID gets value to Int64ID
+func (o *Archive) GetInt64ID() int64 {
+	return getInt64ID(o)
+}
+
+// SetInt64ID sets value to Int64ID
+func (o *Archive) SetInt64ID(v int64) {
+	setInt64ID(o, v)
+}
+
+// GetName returns value of Name
+func (o *Archive) GetName() string {
+	return o.Name
+}
+
+// SetName sets value to Name
+func (o *Archive) SetName(v string) {
+	o.Name = v
+}
+
+// GetDescription returns value of Description
+func (o *Archive) GetDescription() string {
+	return o.Description
+}
+
+// SetDescription sets value to Description
+func (o *Archive) SetDescription(v string) {
+	o.Description = v
+}
+
+// GetTags returns value of Tags
+func (o *Archive) GetTags() []string {
+	return o.Tags
+}
+
+// SetTags sets value to Tags
+func (o *Archive) SetTags(v []string) {
+	o.Tags = v
+}
+
+// GetDisplayOrder returns value of DisplayOrder
+func (o *Archive) GetDisplayOrder() int {
+	return o.DisplayOrder
+}
+
+// SetDisplayOrder sets value to DisplayOrder
+func (o *Archive) SetDisplayOrder(v int) {
+	o.DisplayOrder = v
+}
+
+// GetAvailability returns value of Availability
+func (o *Archive) GetAvailability() types.EAvailability {
+	return o.Availability
+}
+
+// SetAvailability sets value to Availability
+func (o *Archive) SetAvailability(v types.EAvailability) {
+	o.Availability = v
+}
+
+// GetScope returns value of Scope
+func (o *Archive) GetScope() types.EScope {
+	return o.Scope
+}
+
+// SetScope sets value to Scope
+func (o *Archive) SetScope(v types.EScope) {
+	o.Scope = v
+}
+
+// GetSizeMB returns value of SizeMB
+func (o *Archive) GetSizeMB() int {
+	return o.SizeMB
+}
+
+// SetSizeMB sets value to SizeMB
+func (o *Archive) SetSizeMB(v int) {
+	o.SizeMB = v
+}
+
+// GetSizeGB gets value to SizeGB
+func (o *Archive) GetSizeGB() int {
+	return getSizeGB(o)
+}
+
+// SetSizeGB sets value to SizeGB
+func (o *Archive) SetSizeGB(v int) {
+	setSizeGB(o, v)
+}
+
+// GetMigratedMB returns value of MigratedMB
+func (o *Archive) GetMigratedMB() int {
+	return o.MigratedMB
+}
+
+// SetMigratedMB sets value to MigratedMB
+func (o *Archive) SetMigratedMB(v int) {
+	o.MigratedMB = v
+}
+
+// GetMigratedGB gets value to MigratedGB
+func (o *Archive) GetMigratedGB() int {
+	return getMigratedGB(o)
+}
+
+// SetMigratedGB sets value to MigratedGB
+func (o *Archive) SetMigratedGB(v int) {
+	setMigratedGB(o, v)
+}
+
+// GetDiskPlanID returns value of DiskPlanID
+func (o *Archive) GetDiskPlanID() types.ID {
+	return o.DiskPlanID
+}
+
+// SetDiskPlanID sets value to DiskPlanID
+func (o *Archive) SetDiskPlanID(v types.ID) {
+	o.DiskPlanID = v
+}
+
+// GetDiskPlanName returns value of DiskPlanName
+func (o *Archive) GetDiskPlanName() string {
+	return o.DiskPlanName
+}
+
+// SetDiskPlanName sets value to DiskPlanName
+func (o *Archive) SetDiskPlanName(v string) {
+	o.DiskPlanName = v
+}
+
+// GetDiskPlanStorageClass returns value of DiskPlanStorageClass
+func (o *Archive) GetDiskPlanStorageClass() types.StringFlag {
+	return o.DiskPlanStorageClass
+}
+
+// SetDiskPlanStorageClass sets value to DiskPlanStorageClass
+func (o *Archive) SetDiskPlanStorageClass(v types.StringFlag) {
+	o.DiskPlanStorageClass = v
+}
+
+// GetSourceDiskID returns value of SourceDiskID
+func (o *Archive) GetSourceDiskID() types.ID {
+	return o.SourceDiskID
+}
+
+// SetSourceDiskID sets value to SourceDiskID
+func (o *Archive) SetSourceDiskID(v types.ID) {
+	o.SourceDiskID = v
+}
+
+// GetSourceDiskAvailability returns value of SourceDiskAvailability
+func (o *Archive) GetSourceDiskAvailability() types.EAvailability {
+	return o.SourceDiskAvailability
+}
+
+// SetSourceDiskAvailability sets value to SourceDiskAvailability
+func (o *Archive) SetSourceDiskAvailability(v types.EAvailability) {
+	o.SourceDiskAvailability = v
+}
+
+// GetSourceArchiveID returns value of SourceArchiveID
+func (o *Archive) GetSourceArchiveID() types.ID {
+	return o.SourceArchiveID
+}
+
+// SetSourceArchiveID sets value to SourceArchiveID
+func (o *Archive) SetSourceArchiveID(v types.ID) {
+	o.SourceArchiveID = v
+}
+
+// GetSourceArchiveAvailability returns value of SourceArchiveAvailability
+func (o *Archive) GetSourceArchiveAvailability() types.EAvailability {
+	return o.SourceArchiveAvailability
+}
+
+// SetSourceArchiveAvailability sets value to SourceArchiveAvailability
+func (o *Archive) SetSourceArchiveAvailability(v types.EAvailability) {
+	o.SourceArchiveAvailability = v
+}
+
+// GetBundleInfo returns value of BundleInfo
+func (o *Archive) GetBundleInfo() *naked.BundleInfo {
+	return o.BundleInfo
+}
+
+// SetBundleInfo sets value to BundleInfo
+func (o *Archive) SetBundleInfo(v *naked.BundleInfo) {
+	o.BundleInfo = v
+}
+
+// GetStorage returns value of Storage
+func (o *Archive) GetStorage() *naked.Storage {
+	return o.Storage
+}
+
+// SetStorage sets value to Storage
+func (o *Archive) SetStorage(v *naked.Storage) {
+	o.Storage = v
+}
+
+// GetIcon returns value of Icon
+func (o *Archive) GetIcon() *naked.Icon {
+	return o.Icon
+}
+
+// SetIcon sets value to Icon
+func (o *Archive) SetIcon(v *naked.Icon) {
+	o.Icon = v
+}
+
+// GetCreatedAt returns value of CreatedAt
+func (o *Archive) GetCreatedAt() *time.Time {
+	return o.CreatedAt
+}
+
+// SetCreatedAt sets value to CreatedAt
+func (o *Archive) SetCreatedAt(v *time.Time) {
+	o.CreatedAt = v
+}
+
+// GetModifiedAt returns value of ModifiedAt
+func (o *Archive) GetModifiedAt() *time.Time {
+	return o.ModifiedAt
+}
+
+// SetModifiedAt sets value to ModifiedAt
+func (o *Archive) SetModifiedAt(v *time.Time) {
+	o.ModifiedAt = v
+}
+
+// GetOriginalArchiveID returns value of OriginalArchiveID
+func (o *Archive) GetOriginalArchiveID() types.ID {
+	return o.OriginalArchiveID
+}
+
+// SetOriginalArchiveID sets value to OriginalArchiveID
+func (o *Archive) SetOriginalArchiveID(v types.ID) {
+	o.OriginalArchiveID = v
+}
+
+// GetSourceInfo returns value of SourceInfo
+func (o *Archive) GetSourceInfo() *SourceArchiveInfo {
+	return o.SourceInfo
+}
+
+// SetSourceInfo sets value to SourceInfo
+func (o *Archive) SetSourceInfo(v *SourceArchiveInfo) {
+	o.SourceInfo = v
+}
+
+// convertTo returns naked Archive
+func (o *Archive) convertTo() (*naked.Archive, error) {
+	dest := &naked.Archive{}
+	err := mapconv.ConvertTo(o, dest)
+	return dest, err
+}
+
+// convertFrom parse values from naked Archive
+func (o *Archive) convertFrom(naked *naked.Archive) error {
+	return mapconv.ConvertFrom(naked, o)
+}
+
+/*************************************************
+* SourceArchiveInfo
+*************************************************/
+
+// SourceArchiveInfo represents API parameter/response structure
+type SourceArchiveInfo struct {
+	ID        types.ID `mapconv:"ArchiveUnderZone.ID"`
+	AccountID types.ID `mapconv:"ArchiveUnderZone.Account.ID"`
+	ZoneID    types.ID `mapconv:"ArchiveUnderZone.Zone.ID"`
+	ZoneName  string   `mapconv:"ArchiveUnderZone.Zone.Name"`
+}
+
+// Validate validates by field tags
+func (o *SourceArchiveInfo) Validate() error {
+	return validator.New().Struct(o)
+}
+
+// GetID returns value of ID
+func (o *SourceArchiveInfo) GetID() types.ID {
+	return o.ID
+}
+
+// GetAccountID returns value of AccountID
+func (o *SourceArchiveInfo) GetAccountID() types.ID {
+	return o.AccountID
+}
+
+// GetZoneID returns value of ZoneID
+func (o *SourceArchiveInfo) GetZoneID() types.ID {
+	return o.ZoneID
+}
+
+// GetZoneName returns value of ZoneName
+func (o *SourceArchiveInfo) GetZoneName() string {
+	return o.ZoneName
+}
+
+/*************************************************
+* FindCondition
+*************************************************/
+
+// FindCondition represents API parameter/response structure
+type FindCondition struct {
+	Count   int
+	From    int
+	Sort    []string
+	Filter  map[string]interface{}
+	Include []string
+	Exclude []string
+}
+
+// Validate validates by field tags
+func (o *FindCondition) Validate() error {
+	return validator.New().Struct(o)
+}
+
+// GetCount returns value of Count
+func (o *FindCondition) GetCount() int {
+	return o.Count
+}
+
+// SetCount sets value to Count
+func (o *FindCondition) SetCount(v int) {
+	o.Count = v
+}
+
+// GetFrom returns value of From
+func (o *FindCondition) GetFrom() int {
+	return o.From
+}
+
+// SetFrom sets value to From
+func (o *FindCondition) SetFrom(v int) {
+	o.From = v
+}
+
+// GetSort returns value of Sort
+func (o *FindCondition) GetSort() []string {
+	return o.Sort
+}
+
+// SetSort sets value to Sort
+func (o *FindCondition) SetSort(v []string) {
+	o.Sort = v
+}
+
+// GetFilter returns value of Filter
+func (o *FindCondition) GetFilter() map[string]interface{} {
+	return o.Filter
+}
+
+// SetFilter sets value to Filter
+func (o *FindCondition) SetFilter(v map[string]interface{}) {
+	o.Filter = v
+}
+
+// GetInclude returns value of Include
+func (o *FindCondition) GetInclude() []string {
+	return o.Include
+}
+
+// SetInclude sets value to Include
+func (o *FindCondition) SetInclude(v []string) {
+	o.Include = v
+}
+
+// GetExclude returns value of Exclude
+func (o *FindCondition) GetExclude() []string {
+	return o.Exclude
+}
+
+// SetExclude sets value to Exclude
+func (o *FindCondition) SetExclude(v []string) {
+	o.Exclude = v
+}
+
+/*************************************************
+* ArchiveCreateRequest
+*************************************************/
+
+// ArchiveCreateRequest represents API parameter/response structure
+type ArchiveCreateRequest struct {
+	SourceDiskID    types.ID `mapconv:"SourceDisk.ID,omitempty"`
+	SourceArchiveID types.ID `mapconv:"SourceArchive.ID,omitempty"`
+	Name            string   `validate:"required"`
+	Description     string   `validate:"min=0,max=512"`
+	Tags            []string
+	IconID          types.ID `mapconv:"Icon.ID"`
+}
+
+// Validate validates by field tags
+func (o *ArchiveCreateRequest) Validate() error {
+	return validator.New().Struct(o)
+}
+
+// GetSourceDiskID returns value of SourceDiskID
+func (o *ArchiveCreateRequest) GetSourceDiskID() types.ID {
+	return o.SourceDiskID
+}
+
+// SetSourceDiskID sets value to SourceDiskID
+func (o *ArchiveCreateRequest) SetSourceDiskID(v types.ID) {
+	o.SourceDiskID = v
+}
+
+// GetSourceArchiveID returns value of SourceArchiveID
+func (o *ArchiveCreateRequest) GetSourceArchiveID() types.ID {
+	return o.SourceArchiveID
+}
+
+// SetSourceArchiveID sets value to SourceArchiveID
+func (o *ArchiveCreateRequest) SetSourceArchiveID(v types.ID) {
+	o.SourceArchiveID = v
+}
+
+// GetName returns value of Name
+func (o *ArchiveCreateRequest) GetName() string {
+	return o.Name
+}
+
+// SetName sets value to Name
+func (o *ArchiveCreateRequest) SetName(v string) {
+	o.Name = v
+}
+
+// GetDescription returns value of Description
+func (o *ArchiveCreateRequest) GetDescription() string {
+	return o.Description
+}
+
+// SetDescription sets value to Description
+func (o *ArchiveCreateRequest) SetDescription(v string) {
+	o.Description = v
+}
+
+// GetTags returns value of Tags
+func (o *ArchiveCreateRequest) GetTags() []string {
+	return o.Tags
+}
+
+// SetTags sets value to Tags
+func (o *ArchiveCreateRequest) SetTags(v []string) {
+	o.Tags = v
+}
+
+// GetIconID returns value of IconID
+func (o *ArchiveCreateRequest) GetIconID() types.ID {
+	return o.IconID
+}
+
+// SetIconID sets value to IconID
+func (o *ArchiveCreateRequest) SetIconID(v types.ID) {
+	o.IconID = v
+}
+
+// convertTo returns naked ArchiveCreateRequest
+func (o *ArchiveCreateRequest) convertTo() (*naked.Archive, error) {
+	dest := &naked.Archive{}
+	err := mapconv.ConvertTo(o, dest)
+	return dest, err
+}
+
+// convertFrom parse values from naked ArchiveCreateRequest
+func (o *ArchiveCreateRequest) convertFrom(naked *naked.Archive) error {
+	return mapconv.ConvertFrom(naked, o)
+}
+
+/*************************************************
+* FTPServer
+*************************************************/
+
+// FTPServer represents API parameter/response structure
+type FTPServer struct {
+	HostName  string
+	IPAddress string
+	User      string
+	Password  string
+}
+
+// Validate validates by field tags
+func (o *FTPServer) Validate() error {
+	return validator.New().Struct(o)
+}
+
+// GetHostName returns value of HostName
+func (o *FTPServer) GetHostName() string {
+	return o.HostName
+}
+
+// SetHostName sets value to HostName
+func (o *FTPServer) SetHostName(v string) {
+	o.HostName = v
+}
+
+// GetIPAddress returns value of IPAddress
+func (o *FTPServer) GetIPAddress() string {
+	return o.IPAddress
+}
+
+// SetIPAddress sets value to IPAddress
+func (o *FTPServer) SetIPAddress(v string) {
+	o.IPAddress = v
+}
+
+// GetUser returns value of User
+func (o *FTPServer) GetUser() string {
+	return o.User
+}
+
+// SetUser sets value to User
+func (o *FTPServer) SetUser(v string) {
+	o.User = v
+}
+
+// GetPassword returns value of Password
+func (o *FTPServer) GetPassword() string {
+	return o.Password
+}
+
+// SetPassword sets value to Password
+func (o *FTPServer) SetPassword(v string) {
+	o.Password = v
+}
+
+// convertTo returns naked FTPServer
+func (o *FTPServer) convertTo() (*naked.OpeningFTPServer, error) {
+	dest := &naked.OpeningFTPServer{}
+	err := mapconv.ConvertTo(o, dest)
+	return dest, err
+}
+
+// convertFrom parse values from naked FTPServer
+func (o *FTPServer) convertFrom(naked *naked.OpeningFTPServer) error {
+	return mapconv.ConvertFrom(naked, o)
+}
+
+/*************************************************
+* ArchiveCreateBlankRequest
+*************************************************/
+
+// ArchiveCreateBlankRequest represents API parameter/response structure
+type ArchiveCreateBlankRequest struct {
+	SizeMB      int
+	Name        string `validate:"required"`
+	Description string `validate:"min=0,max=512"`
+	Tags        []string
+	IconID      types.ID `mapconv:"Icon.ID"`
+}
+
+// Validate validates by field tags
+func (o *ArchiveCreateBlankRequest) Validate() error {
+	return validator.New().Struct(o)
+}
+
+// GetSizeMB returns value of SizeMB
+func (o *ArchiveCreateBlankRequest) GetSizeMB() int {
+	return o.SizeMB
+}
+
+// SetSizeMB sets value to SizeMB
+func (o *ArchiveCreateBlankRequest) SetSizeMB(v int) {
+	o.SizeMB = v
+}
+
+// GetSizeGB gets value to SizeGB
+func (o *ArchiveCreateBlankRequest) GetSizeGB() int {
+	return getSizeGB(o)
+}
+
+// SetSizeGB sets value to SizeGB
+func (o *ArchiveCreateBlankRequest) SetSizeGB(v int) {
+	setSizeGB(o, v)
+}
+
+// GetName returns value of Name
+func (o *ArchiveCreateBlankRequest) GetName() string {
+	return o.Name
+}
+
+// SetName sets value to Name
+func (o *ArchiveCreateBlankRequest) SetName(v string) {
+	o.Name = v
+}
+
+// GetDescription returns value of Description
+func (o *ArchiveCreateBlankRequest) GetDescription() string {
+	return o.Description
+}
+
+// SetDescription sets value to Description
+func (o *ArchiveCreateBlankRequest) SetDescription(v string) {
+	o.Description = v
+}
+
+// GetTags returns value of Tags
+func (o *ArchiveCreateBlankRequest) GetTags() []string {
+	return o.Tags
+}
+
+// SetTags sets value to Tags
+func (o *ArchiveCreateBlankRequest) SetTags(v []string) {
+	o.Tags = v
+}
+
+// GetIconID returns value of IconID
+func (o *ArchiveCreateBlankRequest) GetIconID() types.ID {
+	return o.IconID
+}
+
+// SetIconID sets value to IconID
+func (o *ArchiveCreateBlankRequest) SetIconID(v types.ID) {
+	o.IconID = v
+}
+
+// convertTo returns naked ArchiveCreateBlankRequest
+func (o *ArchiveCreateBlankRequest) convertTo() (*naked.Archive, error) {
+	dest := &naked.Archive{}
+	err := mapconv.ConvertTo(o, dest)
+	return dest, err
+}
+
+// convertFrom parse values from naked ArchiveCreateBlankRequest
+func (o *ArchiveCreateBlankRequest) convertFrom(naked *naked.Archive) error {
+	return mapconv.ConvertFrom(naked, o)
+}
+
+/*************************************************
+* ArchiveUpdateRequest
+*************************************************/
+
+// ArchiveUpdateRequest represents API parameter/response structure
+type ArchiveUpdateRequest struct {
+	Name        string `validate:"required"`
+	Description string `validate:"min=0,max=512"`
+	Tags        []string
+	IconID      types.ID `mapconv:"Icon.ID"`
+}
+
+// Validate validates by field tags
+func (o *ArchiveUpdateRequest) Validate() error {
+	return validator.New().Struct(o)
+}
+
+// GetName returns value of Name
+func (o *ArchiveUpdateRequest) GetName() string {
+	return o.Name
+}
+
+// SetName sets value to Name
+func (o *ArchiveUpdateRequest) SetName(v string) {
+	o.Name = v
+}
+
+// GetDescription returns value of Description
+func (o *ArchiveUpdateRequest) GetDescription() string {
+	return o.Description
+}
+
+// SetDescription sets value to Description
+func (o *ArchiveUpdateRequest) SetDescription(v string) {
+	o.Description = v
+}
+
+// GetTags returns value of Tags
+func (o *ArchiveUpdateRequest) GetTags() []string {
+	return o.Tags
+}
+
+// SetTags sets value to Tags
+func (o *ArchiveUpdateRequest) SetTags(v []string) {
+	o.Tags = v
+}
+
+// GetIconID returns value of IconID
+func (o *ArchiveUpdateRequest) GetIconID() types.ID {
+	return o.IconID
+}
+
+// SetIconID sets value to IconID
+func (o *ArchiveUpdateRequest) SetIconID(v types.ID) {
+	o.IconID = v
+}
+
+// convertTo returns naked ArchiveUpdateRequest
+func (o *ArchiveUpdateRequest) convertTo() (*naked.Archive, error) {
+	dest := &naked.Archive{}
+	err := mapconv.ConvertTo(o, dest)
+	return dest, err
+}
+
+// convertFrom parse values from naked ArchiveUpdateRequest
+func (o *ArchiveUpdateRequest) convertFrom(naked *naked.Archive) error {
+	return mapconv.ConvertFrom(naked, o)
+}
+
+/*************************************************
+* OpenFTPRequest
+*************************************************/
+
+// OpenFTPRequest represents API parameter/response structure
+type OpenFTPRequest struct {
+	ChangePassword bool
+}
+
+// Validate validates by field tags
+func (o *OpenFTPRequest) Validate() error {
+	return validator.New().Struct(o)
+}
+
+// GetChangePassword returns value of ChangePassword
+func (o *OpenFTPRequest) GetChangePassword() bool {
+	return o.ChangePassword
+}
+
+// SetChangePassword sets value to ChangePassword
+func (o *OpenFTPRequest) SetChangePassword(v bool) {
+	o.ChangePassword = v
+}
+
+/*************************************************
 * CDROM
 *************************************************/
 
@@ -189,154 +966,6 @@ func (o *CDROM) convertFrom(naked *naked.CDROM) error {
 }
 
 /*************************************************
-* FindCondition
-*************************************************/
-
-// FindCondition represents API parameter/response structure
-type FindCondition struct {
-	Count   int
-	From    int
-	Sort    []string
-	Filter  map[string]interface{}
-	Include []string
-	Exclude []string
-}
-
-// Validate validates by field tags
-func (o *FindCondition) Validate() error {
-	return validator.New().Struct(o)
-}
-
-// GetCount returns value of Count
-func (o *FindCondition) GetCount() int {
-	return o.Count
-}
-
-// SetCount sets value to Count
-func (o *FindCondition) SetCount(v int) {
-	o.Count = v
-}
-
-// GetFrom returns value of From
-func (o *FindCondition) GetFrom() int {
-	return o.From
-}
-
-// SetFrom sets value to From
-func (o *FindCondition) SetFrom(v int) {
-	o.From = v
-}
-
-// GetSort returns value of Sort
-func (o *FindCondition) GetSort() []string {
-	return o.Sort
-}
-
-// SetSort sets value to Sort
-func (o *FindCondition) SetSort(v []string) {
-	o.Sort = v
-}
-
-// GetFilter returns value of Filter
-func (o *FindCondition) GetFilter() map[string]interface{} {
-	return o.Filter
-}
-
-// SetFilter sets value to Filter
-func (o *FindCondition) SetFilter(v map[string]interface{}) {
-	o.Filter = v
-}
-
-// GetInclude returns value of Include
-func (o *FindCondition) GetInclude() []string {
-	return o.Include
-}
-
-// SetInclude sets value to Include
-func (o *FindCondition) SetInclude(v []string) {
-	o.Include = v
-}
-
-// GetExclude returns value of Exclude
-func (o *FindCondition) GetExclude() []string {
-	return o.Exclude
-}
-
-// SetExclude sets value to Exclude
-func (o *FindCondition) SetExclude(v []string) {
-	o.Exclude = v
-}
-
-/*************************************************
-* FTPServer
-*************************************************/
-
-// FTPServer represents API parameter/response structure
-type FTPServer struct {
-	HostName  string
-	IPAddress string
-	User      string
-	Password  string
-}
-
-// Validate validates by field tags
-func (o *FTPServer) Validate() error {
-	return validator.New().Struct(o)
-}
-
-// GetHostName returns value of HostName
-func (o *FTPServer) GetHostName() string {
-	return o.HostName
-}
-
-// SetHostName sets value to HostName
-func (o *FTPServer) SetHostName(v string) {
-	o.HostName = v
-}
-
-// GetIPAddress returns value of IPAddress
-func (o *FTPServer) GetIPAddress() string {
-	return o.IPAddress
-}
-
-// SetIPAddress sets value to IPAddress
-func (o *FTPServer) SetIPAddress(v string) {
-	o.IPAddress = v
-}
-
-// GetUser returns value of User
-func (o *FTPServer) GetUser() string {
-	return o.User
-}
-
-// SetUser sets value to User
-func (o *FTPServer) SetUser(v string) {
-	o.User = v
-}
-
-// GetPassword returns value of Password
-func (o *FTPServer) GetPassword() string {
-	return o.Password
-}
-
-// SetPassword sets value to Password
-func (o *FTPServer) SetPassword(v string) {
-	o.Password = v
-}
-
-// convertTo returns naked FTPServer
-func (o *FTPServer) convertTo() (*naked.OpeningFTPServer, error) {
-	dest := &naked.OpeningFTPServer{}
-	err := mapconv.ConvertTo(o, dest)
-	return dest, err
-}
-
-// convertFrom parse values from naked FTPServer
-func (o *FTPServer) convertFrom(naked *naked.OpeningFTPServer) error {
-	return mapconv.ConvertFrom(naked, o)
-}
-
-/*************************************************
 * CDROMCreateRequest
 *************************************************/
 
@@ -496,27 +1125,909 @@ func (o *CDROMUpdateRequest) convertFrom(naked *naked.CDROM) error {
 }
 
 /*************************************************
-* OpenFTPParam
+* Disk
 *************************************************/
 
-// OpenFTPParam represents API parameter/response structure
-type OpenFTPParam struct {
-	ChangePassword bool
+// Disk represents API parameter/response structure
+type Disk struct {
+	ID                        types.ID
+	Name                      string `validate:"required"`
+	Description               string `validate:"min=0,max=512"`
+	Tags                      []string
+	Availability              types.EAvailability
+	Connection                types.EDiskConnection
+	ConnectionOrder           int
+	ReinstallCount            int
+	SizeMB                    int
+	MigratedMB                int
+	DiskPlanID                types.ID            `mapconv:"Plan.ID"`
+	DiskPlanName              string              `mapconv:"Plan.Name"`
+	DiskPlanStorageClass      types.StringFlag    `mapconv:"Plan.StorageClass"`
+	SourceDiskID              types.ID            `mapconv:"SourceDisk.ID,omitempty"`
+	SourceDiskAvailability    types.EAvailability `mapconv:"SourceDisk.Availability,omitempty"`
+	SourceArchiveID           types.ID            `mapconv:"SourceArchive.ID,omitempty"`
+	SourceArchiveAvailability types.EAvailability `mapconv:"SourceArchive.Availability,omitempty"`
+	BundleInfo                *naked.BundleInfo   `json:",omitempty"`
+	Storage                   *naked.Storage      `json:",omitempty"`
+	Icon                      *naked.Icon         `json:",omitempty"`
+	CreatedAt                 *time.Time
+	ModifiedAt                *time.Time
 }
 
 // Validate validates by field tags
-func (o *OpenFTPParam) Validate() error {
+func (o *Disk) Validate() error {
 	return validator.New().Struct(o)
 }
 
-// GetChangePassword returns value of ChangePassword
-func (o *OpenFTPParam) GetChangePassword() bool {
-	return o.ChangePassword
+// GetID returns value of ID
+func (o *Disk) GetID() types.ID {
+	return o.ID
 }
 
-// SetChangePassword sets value to ChangePassword
-func (o *OpenFTPParam) SetChangePassword(v bool) {
-	o.ChangePassword = v
+// SetID sets value to ID
+func (o *Disk) SetID(v types.ID) {
+	o.ID = v
+}
+
+// GetStringID gets value to StringID
+func (o *Disk) GetStringID() string {
+	return getStringID(o)
+}
+
+// SetStringID sets value to StringID
+func (o *Disk) SetStringID(v string) {
+	setStringID(o, v)
+}
+
+// GetInt64ID gets value to Int64ID
+func (o *Disk) GetInt64ID() int64 {
+	return getInt64ID(o)
+}
+
+// SetInt64ID sets value to Int64ID
+func (o *Disk) SetInt64ID(v int64) {
+	setInt64ID(o, v)
+}
+
+// GetName returns value of Name
+func (o *Disk) GetName() string {
+	return o.Name
+}
+
+// SetName sets value to Name
+func (o *Disk) SetName(v string) {
+	o.Name = v
+}
+
+// GetDescription returns value of Description
+func (o *Disk) GetDescription() string {
+	return o.Description
+}
+
+// SetDescription sets value to Description
+func (o *Disk) SetDescription(v string) {
+	o.Description = v
+}
+
+// GetTags returns value of Tags
+func (o *Disk) GetTags() []string {
+	return o.Tags
+}
+
+// SetTags sets value to Tags
+func (o *Disk) SetTags(v []string) {
+	o.Tags = v
+}
+
+// GetAvailability returns value of Availability
+func (o *Disk) GetAvailability() types.EAvailability {
+	return o.Availability
+}
+
+// SetAvailability sets value to Availability
+func (o *Disk) SetAvailability(v types.EAvailability) {
+	o.Availability = v
+}
+
+// GetConnection returns value of Connection
+func (o *Disk) GetConnection() types.EDiskConnection {
+	return o.Connection
+}
+
+// SetConnection sets value to Connection
+func (o *Disk) SetConnection(v types.EDiskConnection) {
+	o.Connection = v
+}
+
+// GetConnectionOrder returns value of ConnectionOrder
+func (o *Disk) GetConnectionOrder() int {
+	return o.ConnectionOrder
+}
+
+// SetConnectionOrder sets value to ConnectionOrder
+func (o *Disk) SetConnectionOrder(v int) {
+	o.ConnectionOrder = v
+}
+
+// GetReinstallCount returns value of ReinstallCount
+func (o *Disk) GetReinstallCount() int {
+	return o.ReinstallCount
+}
+
+// SetReinstallCount sets value to ReinstallCount
+func (o *Disk) SetReinstallCount(v int) {
+	o.ReinstallCount = v
+}
+
+// GetSizeMB returns value of SizeMB
+func (o *Disk) GetSizeMB() int {
+	return o.SizeMB
+}
+
+// SetSizeMB sets value to SizeMB
+func (o *Disk) SetSizeMB(v int) {
+	o.SizeMB = v
+}
+
+// GetSizeGB gets value to SizeGB
+func (o *Disk) GetSizeGB() int {
+	return getSizeGB(o)
+}
+
+// SetSizeGB sets value to SizeGB
+func (o *Disk) SetSizeGB(v int) {
+	setSizeGB(o, v)
+}
+
+// GetMigratedMB returns value of MigratedMB
+func (o *Disk) GetMigratedMB() int {
+	return o.MigratedMB
+}
+
+// SetMigratedMB sets value to MigratedMB
+func (o *Disk) SetMigratedMB(v int) {
+	o.MigratedMB = v
+}
+
+// GetMigratedGB gets value to MigratedGB
+func (o *Disk) GetMigratedGB() int {
+	return getMigratedGB(o)
+}
+
+// SetMigratedGB sets value to MigratedGB
+func (o *Disk) SetMigratedGB(v int) {
+	setMigratedGB(o, v)
+}
+
+// GetDiskPlanID returns value of DiskPlanID
+func (o *Disk) GetDiskPlanID() types.ID {
+	return o.DiskPlanID
+}
+
+// SetDiskPlanID sets value to DiskPlanID
+func (o *Disk) SetDiskPlanID(v types.ID) {
+	o.DiskPlanID = v
+}
+
+// GetDiskPlanName returns value of DiskPlanName
+func (o *Disk) GetDiskPlanName() string {
+	return o.DiskPlanName
+}
+
+// SetDiskPlanName sets value to DiskPlanName
+func (o *Disk) SetDiskPlanName(v string) {
+	o.DiskPlanName = v
+}
+
+// GetDiskPlanStorageClass returns value of DiskPlanStorageClass
+func (o *Disk) GetDiskPlanStorageClass() types.StringFlag {
+	return o.DiskPlanStorageClass
+}
+
+// SetDiskPlanStorageClass sets value to DiskPlanStorageClass
+func (o *Disk) SetDiskPlanStorageClass(v types.StringFlag) {
+	o.DiskPlanStorageClass = v
+}
+
+// GetSourceDiskID returns value of SourceDiskID
+func (o *Disk) GetSourceDiskID() types.ID {
+	return o.SourceDiskID
+}
+
+// SetSourceDiskID sets value to SourceDiskID
+func (o *Disk) SetSourceDiskID(v types.ID) {
+	o.SourceDiskID = v
+}
+
+// GetSourceDiskAvailability returns value of SourceDiskAvailability
+func (o *Disk) GetSourceDiskAvailability() types.EAvailability {
+	return o.SourceDiskAvailability
+}
+
+// SetSourceDiskAvailability sets value to SourceDiskAvailability
+func (o *Disk) SetSourceDiskAvailability(v types.EAvailability) {
+	o.SourceDiskAvailability = v
+}
+
+// GetSourceArchiveID returns value of SourceArchiveID
+func (o *Disk) GetSourceArchiveID() types.ID {
+	return o.SourceArchiveID
+}
+
+// SetSourceArchiveID sets value to SourceArchiveID
+func (o *Disk) SetSourceArchiveID(v types.ID) {
+	o.SourceArchiveID = v
+}
+
+// GetSourceArchiveAvailability returns value of SourceArchiveAvailability
+func (o *Disk) GetSourceArchiveAvailability() types.EAvailability {
+	return o.SourceArchiveAvailability
+}
+
+// SetSourceArchiveAvailability sets value to SourceArchiveAvailability
+func (o *Disk) SetSourceArchiveAvailability(v types.EAvailability) {
+	o.SourceArchiveAvailability = v
+}
+
+// GetBundleInfo returns value of BundleInfo
+func (o *Disk) GetBundleInfo() *naked.BundleInfo {
+	return o.BundleInfo
+}
+
+// SetBundleInfo sets value to BundleInfo
+func (o *Disk) SetBundleInfo(v *naked.BundleInfo) {
+	o.BundleInfo = v
+}
+
+// GetStorage returns value of Storage
+func (o *Disk) GetStorage() *naked.Storage {
+	return o.Storage
+}
+
+// SetStorage sets value to Storage
+func (o *Disk) SetStorage(v *naked.Storage) {
+	o.Storage = v
+}
+
+// GetIcon returns value of Icon
+func (o *Disk) GetIcon() *naked.Icon {
+	return o.Icon
+}
+
+// SetIcon sets value to Icon
+func (o *Disk) SetIcon(v *naked.Icon) {
+	o.Icon = v
+}
+
+// GetCreatedAt returns value of CreatedAt
+func (o *Disk) GetCreatedAt() *time.Time {
+	return o.CreatedAt
+}
+
+// SetCreatedAt sets value to CreatedAt
+func (o *Disk) SetCreatedAt(v *time.Time) {
+	o.CreatedAt = v
+}
+
+// GetModifiedAt returns value of ModifiedAt
+func (o *Disk) GetModifiedAt() *time.Time {
+	return o.ModifiedAt
+}
+
+// SetModifiedAt sets value to ModifiedAt
+func (o *Disk) SetModifiedAt(v *time.Time) {
+	o.ModifiedAt = v
+}
+
+// convertTo returns naked Disk
+func (o *Disk) convertTo() (*naked.Disk, error) {
+	dest := &naked.Disk{}
+	err := mapconv.ConvertTo(o, dest)
+	return dest, err
+}
+
+// convertFrom parse values from naked Disk
+func (o *Disk) convertFrom(naked *naked.Disk) error {
+	return mapconv.ConvertFrom(naked, o)
+}
+
+/*************************************************
+* DiskCreateRequest
+*************************************************/
+
+// DiskCreateRequest represents API parameter/response structure
+type DiskCreateRequest struct {
+	DiskPlanID      types.ID `mapconv:"Plan.ID"`
+	Connection      types.EDiskConnection
+	SourceDiskID    types.ID `mapconv:"SourceDisk.ID,omitempty"`
+	SourceArchiveID types.ID `mapconv:"SourceArchive.ID,omitempty"`
+	ServerID        types.ID `mapconv:"Server.ID,omitempty"`
+	SizeMB          int
+	Name            string `validate:"required"`
+	Description     string `validate:"min=0,max=512"`
+	Tags            []string
+	IconID          types.ID `mapconv:"Icon.ID"`
+}
+
+// Validate validates by field tags
+func (o *DiskCreateRequest) Validate() error {
+	return validator.New().Struct(o)
+}
+
+// GetDiskPlanID returns value of DiskPlanID
+func (o *DiskCreateRequest) GetDiskPlanID() types.ID {
+	return o.DiskPlanID
+}
+
+// SetDiskPlanID sets value to DiskPlanID
+func (o *DiskCreateRequest) SetDiskPlanID(v types.ID) {
+	o.DiskPlanID = v
+}
+
+// GetConnection returns value of Connection
+func (o *DiskCreateRequest) GetConnection() types.EDiskConnection {
+	return o.Connection
+}
+
+// SetConnection sets value to Connection
+func (o *DiskCreateRequest) SetConnection(v types.EDiskConnection) {
+	o.Connection = v
+}
+
+// GetSourceDiskID returns value of SourceDiskID
+func (o *DiskCreateRequest) GetSourceDiskID() types.ID {
+	return o.SourceDiskID
+}
+
+// SetSourceDiskID sets value to SourceDiskID
+func (o *DiskCreateRequest) SetSourceDiskID(v types.ID) {
+	o.SourceDiskID = v
+}
+
+// GetSourceArchiveID returns value of SourceArchiveID
+func (o *DiskCreateRequest) GetSourceArchiveID() types.ID {
+	return o.SourceArchiveID
+}
+
+// SetSourceArchiveID sets value to SourceArchiveID
+func (o *DiskCreateRequest) SetSourceArchiveID(v types.ID) {
+	o.SourceArchiveID = v
+}
+
+// GetServerID returns value of ServerID
+func (o *DiskCreateRequest) GetServerID() types.ID {
+	return o.ServerID
+}
+
+// SetServerID sets value to ServerID
+func (o *DiskCreateRequest) SetServerID(v types.ID) {
+	o.ServerID = v
+}
+
+// GetSizeMB returns value of SizeMB
+func (o *DiskCreateRequest) GetSizeMB() int {
+	return o.SizeMB
+}
+
+// SetSizeMB sets value to SizeMB
+func (o *DiskCreateRequest) SetSizeMB(v int) {
+	o.SizeMB = v
+}
+
+// GetSizeGB gets value to SizeGB
+func (o *DiskCreateRequest) GetSizeGB() int {
+	return getSizeGB(o)
+}
+
+// SetSizeGB sets value to SizeGB
+func (o *DiskCreateRequest) SetSizeGB(v int) {
+	setSizeGB(o, v)
+}
+
+// GetName returns value of Name
+func (o *DiskCreateRequest) GetName() string {
+	return o.Name
+}
+
+// SetName sets value to Name
+func (o *DiskCreateRequest) SetName(v string) {
+	o.Name = v
+}
+
+// GetDescription returns value of Description
+func (o *DiskCreateRequest) GetDescription() string {
+	return o.Description
+}
+
+// SetDescription sets value to Description
+func (o *DiskCreateRequest) SetDescription(v string) {
+	o.Description = v
+}
+
+// GetTags returns value of Tags
+func (o *DiskCreateRequest) GetTags() []string {
+	return o.Tags
+}
+
+// SetTags sets value to Tags
+func (o *DiskCreateRequest) SetTags(v []string) {
+	o.Tags = v
+}
+
+// GetIconID returns value of IconID
+func (o *DiskCreateRequest) GetIconID() types.ID {
+	return o.IconID
+}
+
+// SetIconID sets value to IconID
+func (o *DiskCreateRequest) SetIconID(v types.ID) {
+	o.IconID = v
+}
+
+// convertTo returns naked DiskCreateRequest
+func (o *DiskCreateRequest) convertTo() (*naked.Disk, error) {
+	dest := &naked.Disk{}
+	err := mapconv.ConvertTo(o, dest)
+	return dest, err
+}
+
+// convertFrom parse values from naked DiskCreateRequest
+func (o *DiskCreateRequest) convertFrom(naked *naked.Disk) error {
+	return mapconv.ConvertFrom(naked, o)
+}
+
+/*************************************************
+* DiskEditRequest
+*************************************************/
+
+// DiskEditRequest represents API parameter/response structure
+type DiskEditRequest struct {
+	Password            string              `json:",omitempty" mapconv:",omitempty"`
+	SSHKey              *DiskEditSSHKey     `json:",omitempty" mapconv:",omitempty,recursive"`
+	SSHKeys             []*DiskEditSSHKey   `json:",omitempty" mapconv:"[]SSHKeys,omitempty,recursive"`
+	DisablePWAuth       bool                `json:",omitempty" mapconv:",omitempty"`
+	EnableDHCP          bool                `json:",omitempty" mapconv:",omitempty"`
+	ChangePartitionUUID bool                `json:",omitempty" mapconv:",omitempty"`
+	HostName            string              `json:",omitempty" mapconv:",omitempty"`
+	Notes               []*DiskEditNote     `json:",omitempty" mapconv:",omitempty,recursive"`
+	UserIPAddress       string              `json:",omitempty" mapconv:",omitempty"`
+	UserSubnet          *DiskEditUserSubnet `json:",omitempty" mapconv:",omitempty"`
+}
+
+// Validate validates by field tags
+func (o *DiskEditRequest) Validate() error {
+	return validator.New().Struct(o)
+}
+
+// GetPassword returns value of Password
+func (o *DiskEditRequest) GetPassword() string {
+	return o.Password
+}
+
+// SetPassword sets value to Password
+func (o *DiskEditRequest) SetPassword(v string) {
+	o.Password = v
+}
+
+// GetSSHKey returns value of SSHKey
+func (o *DiskEditRequest) GetSSHKey() *DiskEditSSHKey {
+	return o.SSHKey
+}
+
+// SetSSHKey sets value to SSHKey
+func (o *DiskEditRequest) SetSSHKey(v *DiskEditSSHKey) {
+	o.SSHKey = v
+}
+
+// GetSSHKeys returns value of SSHKeys
+func (o *DiskEditRequest) GetSSHKeys() []*DiskEditSSHKey {
+	return o.SSHKeys
+}
+
+// SetSSHKeys sets value to SSHKeys
+func (o *DiskEditRequest) SetSSHKeys(v []*DiskEditSSHKey) {
+	o.SSHKeys = v
+}
+
+// GetDisablePWAuth returns value of DisablePWAuth
+func (o *DiskEditRequest) GetDisablePWAuth() bool {
+	return o.DisablePWAuth
+}
+
+// SetDisablePWAuth sets value to DisablePWAuth
+func (o *DiskEditRequest) SetDisablePWAuth(v bool) {
+	o.DisablePWAuth = v
+}
+
+// GetEnableDHCP returns value of EnableDHCP
+func (o *DiskEditRequest) GetEnableDHCP() bool {
+	return o.EnableDHCP
+}
+
+// SetEnableDHCP sets value to EnableDHCP
+func (o *DiskEditRequest) SetEnableDHCP(v bool) {
+	o.EnableDHCP = v
+}
+
+// GetChangePartitionUUID returns value of ChangePartitionUUID
+func (o *DiskEditRequest) GetChangePartitionUUID() bool {
+	return o.ChangePartitionUUID
+}
+
+// SetChangePartitionUUID sets value to ChangePartitionUUID
+func (o *DiskEditRequest) SetChangePartitionUUID(v bool) {
+	o.ChangePartitionUUID = v
+}
+
+// GetHostName returns value of HostName
+func (o *DiskEditRequest) GetHostName() string {
+	return o.HostName
+}
+
+// SetHostName sets value to HostName
+func (o *DiskEditRequest) SetHostName(v string) {
+	o.HostName = v
+}
+
+// GetNotes returns value of Notes
+func (o *DiskEditRequest) GetNotes() []*DiskEditNote {
+	return o.Notes
+}
+
+// SetNotes sets value to Notes
+func (o *DiskEditRequest) SetNotes(v []*DiskEditNote) {
+	o.Notes = v
+}
+
+// GetUserIPAddress returns value of UserIPAddress
+func (o *DiskEditRequest) GetUserIPAddress() string {
+	return o.UserIPAddress
+}
+
+// SetUserIPAddress sets value to UserIPAddress
+func (o *DiskEditRequest) SetUserIPAddress(v string) {
+	o.UserIPAddress = v
+}
+
+// GetUserSubnet returns value of UserSubnet
+func (o *DiskEditRequest) GetUserSubnet() *DiskEditUserSubnet {
+	return o.UserSubnet
+}
+
+// SetUserSubnet sets value to UserSubnet
+func (o *DiskEditRequest) SetUserSubnet(v *DiskEditUserSubnet) {
+	o.UserSubnet = v
+}
+
+// convertTo returns naked DiskEditRequest
+func (o *DiskEditRequest) convertTo() (*naked.DiskEdit, error) {
+	dest := &naked.DiskEdit{}
+	err := mapconv.ConvertTo(o, dest)
+	return dest, err
+}
+
+// convertFrom parse values from naked DiskEditRequest
+func (o *DiskEditRequest) convertFrom(naked *naked.DiskEdit) error {
+	return mapconv.ConvertFrom(naked, o)
+}
+
+/*************************************************
+* DiskEditSSHKey
+*************************************************/
+
+// DiskEditSSHKey represents API parameter/response structure
+type DiskEditSSHKey struct {
+	ID        types.ID `json:",omitempty" mapconv:",omitempty"`
+	PublicKey string   `json:",omitempty" mapconv:",omitempty"`
+}
+
+// Validate validates by field tags
+func (o *DiskEditSSHKey) Validate() error {
+	return validator.New().Struct(o)
+}
+
+// GetID returns value of ID
+func (o *DiskEditSSHKey) GetID() types.ID {
+	return o.ID
+}
+
+// SetID sets value to ID
+func (o *DiskEditSSHKey) SetID(v types.ID) {
+	o.ID = v
+}
+
+// GetPublicKey returns value of PublicKey
+func (o *DiskEditSSHKey) GetPublicKey() string {
+	return o.PublicKey
+}
+
+// SetPublicKey sets value to PublicKey
+func (o *DiskEditSSHKey) SetPublicKey(v string) {
+	o.PublicKey = v
+}
+
+/*************************************************
+* DiskEditNote
+*************************************************/
+
+// DiskEditNote represents API parameter/response structure
+type DiskEditNote struct {
+	ID        types.ID               `json:",omitempty" mapconv:",omitempty"`
+	Variables map[string]interface{} `json:",omitempty" mapconv:",omitempty"`
+}
+
+// Validate validates by field tags
+func (o *DiskEditNote) Validate() error {
+	return validator.New().Struct(o)
+}
+
+// GetID returns value of ID
+func (o *DiskEditNote) GetID() types.ID {
+	return o.ID
+}
+
+// SetID sets value to ID
+func (o *DiskEditNote) SetID(v types.ID) {
+	o.ID = v
+}
+
+// GetVariables returns value of Variables
+func (o *DiskEditNote) GetVariables() map[string]interface{} {
+	return o.Variables
+}
+
+// SetVariables sets value to Variables
+func (o *DiskEditNote) SetVariables(v map[string]interface{}) {
+	o.Variables = v
+}
+
+/*************************************************
+* DiskEditUserSubnet
+*************************************************/
+
+// DiskEditUserSubnet represents API parameter/response structure
+type DiskEditUserSubnet struct {
+	DefaultRoute   string `json:",omitempty" mapconv:",omitempty"`
+	NetworkMaskLen int    `json:",omitempty" mapconv:",omitempty" validate:"min=0,max=32"`
+}
+
+// Validate validates by field tags
+func (o *DiskEditUserSubnet) Validate() error {
+	return validator.New().Struct(o)
+}
+
+// GetDefaultRoute returns value of DefaultRoute
+func (o *DiskEditUserSubnet) GetDefaultRoute() string {
+	return o.DefaultRoute
+}
+
+// SetDefaultRoute sets value to DefaultRoute
+func (o *DiskEditUserSubnet) SetDefaultRoute(v string) {
+	o.DefaultRoute = v
+}
+
+// GetNetworkMaskLen returns value of NetworkMaskLen
+func (o *DiskEditUserSubnet) GetNetworkMaskLen() int {
+	return o.NetworkMaskLen
+}
+
+// SetNetworkMaskLen sets value to NetworkMaskLen
+func (o *DiskEditUserSubnet) SetNetworkMaskLen(v int) {
+	o.NetworkMaskLen = v
+}
+
+/*************************************************
+* DiskInstallRequest
+*************************************************/
+
+// DiskInstallRequest represents API parameter/response structure
+type DiskInstallRequest struct {
+	SourceDiskID    types.ID `mapconv:"SourceDisk.ID,omitempty"`
+	SourceArchiveID types.ID `mapconv:"SourceArchive.ID,omitempty"`
+	SizeMB          int
+}
+
+// Validate validates by field tags
+func (o *DiskInstallRequest) Validate() error {
+	return validator.New().Struct(o)
+}
+
+// GetSourceDiskID returns value of SourceDiskID
+func (o *DiskInstallRequest) GetSourceDiskID() types.ID {
+	return o.SourceDiskID
+}
+
+// SetSourceDiskID sets value to SourceDiskID
+func (o *DiskInstallRequest) SetSourceDiskID(v types.ID) {
+	o.SourceDiskID = v
+}
+
+// GetSourceArchiveID returns value of SourceArchiveID
+func (o *DiskInstallRequest) GetSourceArchiveID() types.ID {
+	return o.SourceArchiveID
+}
+
+// SetSourceArchiveID sets value to SourceArchiveID
+func (o *DiskInstallRequest) SetSourceArchiveID(v types.ID) {
+	o.SourceArchiveID = v
+}
+
+// GetSizeMB returns value of SizeMB
+func (o *DiskInstallRequest) GetSizeMB() int {
+	return o.SizeMB
+}
+
+// SetSizeMB sets value to SizeMB
+func (o *DiskInstallRequest) SetSizeMB(v int) {
+	o.SizeMB = v
+}
+
+// GetSizeGB gets value to SizeGB
+func (o *DiskInstallRequest) GetSizeGB() int {
+	return getSizeGB(o)
+}
+
+// SetSizeGB sets value to SizeGB
+func (o *DiskInstallRequest) SetSizeGB(v int) {
+	setSizeGB(o, v)
+}
+
+// convertTo returns naked DiskInstallRequest
+func (o *DiskInstallRequest) convertTo() (*naked.Disk, error) {
+	dest := &naked.Disk{}
+	err := mapconv.ConvertTo(o, dest)
+	return dest, err
+}
+
+// convertFrom parse values from naked DiskInstallRequest
+func (o *DiskInstallRequest) convertFrom(naked *naked.Disk) error {
+	return mapconv.ConvertFrom(naked, o)
+}
+
+/*************************************************
+* DiskUpdateRequest
+*************************************************/
+
+// DiskUpdateRequest represents API parameter/response structure
+type DiskUpdateRequest struct {
+	Name        string `validate:"required"`
+	Description string `validate:"min=0,max=512"`
+	Tags        []string
+	IconID      types.ID `mapconv:"Icon.ID"`
+	Connection  types.EDiskConnection
+}
+
+// Validate validates by field tags
+func (o *DiskUpdateRequest) Validate() error {
+	return validator.New().Struct(o)
+}
+
+// GetName returns value of Name
+func (o *DiskUpdateRequest) GetName() string {
+	return o.Name
+}
+
+// SetName sets value to Name
+func (o *DiskUpdateRequest) SetName(v string) {
+	o.Name = v
+}
+
+// GetDescription returns value of Description
+func (o *DiskUpdateRequest) GetDescription() string {
+	return o.Description
+}
+
+// SetDescription sets value to Description
+func (o *DiskUpdateRequest) SetDescription(v string) {
+	o.Description = v
+}
+
+// GetTags returns value of Tags
+func (o *DiskUpdateRequest) GetTags() []string {
+	return o.Tags
+}
+
+// SetTags sets value to Tags
+func (o *DiskUpdateRequest) SetTags(v []string) {
+	o.Tags = v
+}
+
+// GetIconID returns value of IconID
+func (o *DiskUpdateRequest) GetIconID() types.ID {
+	return o.IconID
+}
+
+// SetIconID sets value to IconID
+func (o *DiskUpdateRequest) SetIconID(v types.ID) {
+	o.IconID = v
+}
+
+// GetConnection returns value of Connection
+func (o *DiskUpdateRequest) GetConnection() types.EDiskConnection {
+	return o.Connection
+}
+
+// SetConnection sets value to Connection
+func (o *DiskUpdateRequest) SetConnection(v types.EDiskConnection) {
+	o.Connection = v
+}
+
+// convertTo returns naked DiskUpdateRequest
+func (o *DiskUpdateRequest) convertTo() (*naked.Disk, error) {
+	dest := &naked.Disk{}
+	err := mapconv.ConvertTo(o, dest)
+	return dest, err
+}
+
+// convertFrom parse values from naked DiskUpdateRequest
+func (o *DiskUpdateRequest) convertFrom(naked *naked.Disk) error {
+	return mapconv.ConvertFrom(naked, o)
+}
+
+/*************************************************
+* DiskActivity
+*************************************************/
+
+// DiskActivity represents API parameter/response structure
+type DiskActivity struct {
+	Values []naked.MonitorDiskValue `mapconv:"Disk"`
+}
+
+// Validate validates by field tags
+func (o *DiskActivity) Validate() error {
+	return validator.New().Struct(o)
+}
+
+// GetValues returns value of Values
+func (o *DiskActivity) GetValues() []naked.MonitorDiskValue {
+	return o.Values
+}
+
+// convertTo returns naked DiskActivity
+func (o *DiskActivity) convertTo() (*naked.MonitorValues, error) {
+	dest := &naked.MonitorValues{}
+	err := mapconv.ConvertTo(o, dest)
+	return dest, err
+}
+
+// convertFrom parse values from naked DiskActivity
+func (o *DiskActivity) convertFrom(naked *naked.MonitorValues) error {
+	return mapconv.ConvertFrom(naked, o)
+}
+
+/*************************************************
+* MonitorCondition
+*************************************************/
+
+// MonitorCondition represents API parameter/response structure
+type MonitorCondition struct {
+	Start *time.Time `json:",omitempty"`
+	End   *time.Time `json:",omitempty"`
+}
+
+// Validate validates by field tags
+func (o *MonitorCondition) Validate() error {
+	return validator.New().Struct(o)
+}
+
+// GetStart returns value of Start
+func (o *MonitorCondition) GetStart() *time.Time {
+	return o.Start
+}
+
+// SetStart sets value to Start
+func (o *MonitorCondition) SetStart(v *time.Time) {
+	o.Start = v
+}
+
+// GetEnd returns value of End
+func (o *MonitorCondition) GetEnd() *time.Time {
+	return o.End
+}
+
+// SetEnd sets value to End
+func (o *MonitorCondition) SetEnd(v *time.Time) {
+	o.End = v
 }
 
 /*************************************************
@@ -775,8 +2286,8 @@ func (o *GSLB) convertFrom(naked *naked.GSLB) error {
 
 // GSLBServer represents API parameter/response structure
 type GSLBServer struct {
-	IPAddress string             `validate:"ipv4"`
-	Enabled   types.StringFlag   `mapconv:",default=true"`
+	IPAddress string `validate:"ipv4"`
+	Enabled   types.StringFlag
 	Weight    types.StringNumber `mapconv:",default=1"`
 }
 
@@ -1518,7 +3029,7 @@ func (o *LoadBalancerVirtualIPAddress) SetServers(v []*LoadBalancerServer) {
 type LoadBalancerServer struct {
 	IPAddress               string             `validate:"ipv4"`
 	Port                    types.StringNumber `validate:"min=1,max=65535"`
-	Enabled                 types.StringFlag   `mapconv:",default=true"`
+	Enabled                 types.StringFlag
 	HealthCheckProtocol     string             `mapconv:"HealthCheck.Protocol" validate:"oneof=http https ping tcp"`
 	HealthCheckPath         string             `mapconv:"HealthCheck.Path"`
 	HealthCheckResponseCode types.StringNumber `mapconv:"HealthCheck.Status"`
@@ -1874,41 +3385,6 @@ func (o *InterfaceActivity) convertTo() (*naked.MonitorValues, error) {
 // convertFrom parse values from naked InterfaceActivity
 func (o *InterfaceActivity) convertFrom(naked *naked.MonitorValues) error {
 	return mapconv.ConvertFrom(naked, o)
-}
-
-/*************************************************
-* MonitorCondition
-*************************************************/
-
-// MonitorCondition represents API parameter/response structure
-type MonitorCondition struct {
-	Start *time.Time `json:",omitempty"`
-	End   *time.Time `json:",omitempty"`
-}
-
-// Validate validates by field tags
-func (o *MonitorCondition) Validate() error {
-	return validator.New().Struct(o)
-}
-
-// GetStart returns value of Start
-func (o *MonitorCondition) GetStart() *time.Time {
-	return o.Start
-}
-
-// SetStart sets value to Start
-func (o *MonitorCondition) SetStart(v *time.Time) {
-	o.Start = v
-}
-
-// GetEnd returns value of End
-func (o *MonitorCondition) GetEnd() *time.Time {
-	return o.End
-}
-
-// SetEnd sets value to End
-func (o *MonitorCondition) SetEnd(v *time.Time) {
-	o.End = v
 }
 
 /*************************************************
@@ -2802,6 +4278,1091 @@ func (o *NoteUpdateRequest) convertTo() (*naked.Note, error) {
 
 // convertFrom parse values from naked NoteUpdateRequest
 func (o *NoteUpdateRequest) convertFrom(naked *naked.Note) error {
+	return mapconv.ConvertFrom(naked, o)
+}
+
+/*************************************************
+* Server
+*************************************************/
+
+// Server represents API parameter/response structure
+type Server struct {
+	ID                      types.ID
+	Name                    string `validate:"required"`
+	Description             string `validate:"min=0,max=512"`
+	Tags                    []string
+	Availability            types.EAvailability
+	HostName                string
+	InterfaceDriver         types.EInterfaceDriver
+	ServerPlanID            types.ID                    `mapconv:"ServerPlan.ID"`
+	ServerPlanName          string                      `mapconv:"ServerPlan.Name"`
+	CPU                     int                         `mapconv:"ServerPlan.CPU"`
+	MemoryMB                int                         `mapconv:"ServerPlan.MemoryMB"`
+	ServerPlanCommitment    string                      `mapconv:"ServerPlan.Commitment"`
+	ServerPlanGeneration    types.EPlanGeneration       `mapconv:"ServerPlan.Generation"`
+	Zone                    *naked.Zone                 `json:",omitempty"`
+	InstanceHostName        string                      `mapconv:"Instance.Host.Name"`
+	InstanceHostInfoURL     string                      `mapconv:"Instance.Host.InfoURL"`
+	InstanceStatus          types.EServerInstanceStatus `mapconv:"Instance.Status"`
+	InstanceBeforeStatus    types.EServerInstanceStatus `mapconv:"Instance.BeforeStatus"`
+	InstanceStatusChangedAt *time.Time                  `mapconv:"Instance.StatusChangedAt"`
+	InstanceWarnings        string                      `mapconv:"Instance.Warnings"`
+	InstanceWarningsValue   int                         `mapconv:"Instance.WarningsValue"`
+	Disks                   []*Disk                     `json:",omitempty" mapconv:",recursive"`
+	Interfaces              []*Interface                `json:",omitempty" mapconv:",recursive"`
+	PrivateHostID           types.ID                    `mapconv:"PrivateHost.ID"`
+	PrivateHostName         string                      `mapconv:"PrivateHost.Name"`
+	BundleInfo              *naked.BundleInfo           `json:",omitempty"`
+	Storage                 *naked.Storage              `json:",omitempty"`
+	Icon                    *naked.Icon                 `json:",omitempty"`
+	CreatedAt               *time.Time
+	ModifiedAt              *time.Time
+}
+
+// Validate validates by field tags
+func (o *Server) Validate() error {
+	return validator.New().Struct(o)
+}
+
+// GetID returns value of ID
+func (o *Server) GetID() types.ID {
+	return o.ID
+}
+
+// SetID sets value to ID
+func (o *Server) SetID(v types.ID) {
+	o.ID = v
+}
+
+// GetStringID gets value to StringID
+func (o *Server) GetStringID() string {
+	return getStringID(o)
+}
+
+// SetStringID sets value to StringID
+func (o *Server) SetStringID(v string) {
+	setStringID(o, v)
+}
+
+// GetInt64ID gets value to Int64ID
+func (o *Server) GetInt64ID() int64 {
+	return getInt64ID(o)
+}
+
+// SetInt64ID sets value to Int64ID
+func (o *Server) SetInt64ID(v int64) {
+	setInt64ID(o, v)
+}
+
+// GetName returns value of Name
+func (o *Server) GetName() string {
+	return o.Name
+}
+
+// SetName sets value to Name
+func (o *Server) SetName(v string) {
+	o.Name = v
+}
+
+// GetDescription returns value of Description
+func (o *Server) GetDescription() string {
+	return o.Description
+}
+
+// SetDescription sets value to Description
+func (o *Server) SetDescription(v string) {
+	o.Description = v
+}
+
+// GetTags returns value of Tags
+func (o *Server) GetTags() []string {
+	return o.Tags
+}
+
+// SetTags sets value to Tags
+func (o *Server) SetTags(v []string) {
+	o.Tags = v
+}
+
+// GetAvailability returns value of Availability
+func (o *Server) GetAvailability() types.EAvailability {
+	return o.Availability
+}
+
+// SetAvailability sets value to Availability
+func (o *Server) SetAvailability(v types.EAvailability) {
+	o.Availability = v
+}
+
+// GetHostName returns value of HostName
+func (o *Server) GetHostName() string {
+	return o.HostName
+}
+
+// SetHostName sets value to HostName
+func (o *Server) SetHostName(v string) {
+	o.HostName = v
+}
+
+// GetInterfaceDriver returns value of InterfaceDriver
+func (o *Server) GetInterfaceDriver() types.EInterfaceDriver {
+	return o.InterfaceDriver
+}
+
+// SetInterfaceDriver sets value to InterfaceDriver
+func (o *Server) SetInterfaceDriver(v types.EInterfaceDriver) {
+	o.InterfaceDriver = v
+}
+
+// GetServerPlanID returns value of ServerPlanID
+func (o *Server) GetServerPlanID() types.ID {
+	return o.ServerPlanID
+}
+
+// SetServerPlanID sets value to ServerPlanID
+func (o *Server) SetServerPlanID(v types.ID) {
+	o.ServerPlanID = v
+}
+
+// GetServerPlanName returns value of ServerPlanName
+func (o *Server) GetServerPlanName() string {
+	return o.ServerPlanName
+}
+
+// SetServerPlanName sets value to ServerPlanName
+func (o *Server) SetServerPlanName(v string) {
+	o.ServerPlanName = v
+}
+
+// GetCPU returns value of CPU
+func (o *Server) GetCPU() int {
+	return o.CPU
+}
+
+// SetCPU sets value to CPU
+func (o *Server) SetCPU(v int) {
+	o.CPU = v
+}
+
+// GetMemoryMB returns value of MemoryMB
+func (o *Server) GetMemoryMB() int {
+	return o.MemoryMB
+}
+
+// SetMemoryMB sets value to MemoryMB
+func (o *Server) SetMemoryMB(v int) {
+	o.MemoryMB = v
+}
+
+// GetMemoryGB gets value to MemoryGB
+func (o *Server) GetMemoryGB() int {
+	return getMemoryGB(o)
+}
+
+// SetMemoryGB sets value to MemoryGB
+func (o *Server) SetMemoryGB(v int) {
+	setMemoryGB(o, v)
+}
+
+// GetServerPlanCommitment returns value of ServerPlanCommitment
+func (o *Server) GetServerPlanCommitment() string {
+	return o.ServerPlanCommitment
+}
+
+// SetServerPlanCommitment sets value to ServerPlanCommitment
+func (o *Server) SetServerPlanCommitment(v string) {
+	o.ServerPlanCommitment = v
+}
+
+// GetServerPlanGeneration returns value of ServerPlanGeneration
+func (o *Server) GetServerPlanGeneration() types.EPlanGeneration {
+	return o.ServerPlanGeneration
+}
+
+// SetServerPlanGeneration sets value to ServerPlanGeneration
+func (o *Server) SetServerPlanGeneration(v types.EPlanGeneration) {
+	o.ServerPlanGeneration = v
+}
+
+// GetZone returns value of Zone
+func (o *Server) GetZone() *naked.Zone {
+	return o.Zone
+}
+
+// SetZone sets value to Zone
+func (o *Server) SetZone(v *naked.Zone) {
+	o.Zone = v
+}
+
+// GetInstanceHostName returns value of InstanceHostName
+func (o *Server) GetInstanceHostName() string {
+	return o.InstanceHostName
+}
+
+// GetInstanceHostInfoURL returns value of InstanceHostInfoURL
+func (o *Server) GetInstanceHostInfoURL() string {
+	return o.InstanceHostInfoURL
+}
+
+// GetInstanceStatus returns value of InstanceStatus
+func (o *Server) GetInstanceStatus() types.EServerInstanceStatus {
+	return o.InstanceStatus
+}
+
+// GetInstanceBeforeStatus returns value of InstanceBeforeStatus
+func (o *Server) GetInstanceBeforeStatus() types.EServerInstanceStatus {
+	return o.InstanceBeforeStatus
+}
+
+// GetInstanceStatusChangedAt returns value of InstanceStatusChangedAt
+func (o *Server) GetInstanceStatusChangedAt() *time.Time {
+	return o.InstanceStatusChangedAt
+}
+
+// GetInstanceWarnings returns value of InstanceWarnings
+func (o *Server) GetInstanceWarnings() string {
+	return o.InstanceWarnings
+}
+
+// GetInstanceWarningsValue returns value of InstanceWarningsValue
+func (o *Server) GetInstanceWarningsValue() int {
+	return o.InstanceWarningsValue
+}
+
+// GetDisks returns value of Disks
+func (o *Server) GetDisks() []*Disk {
+	return o.Disks
+}
+
+// SetDisks sets value to Disks
+func (o *Server) SetDisks(v []*Disk) {
+	o.Disks = v
+}
+
+// GetInterfaces returns value of Interfaces
+func (o *Server) GetInterfaces() []*Interface {
+	return o.Interfaces
+}
+
+// SetInterfaces sets value to Interfaces
+func (o *Server) SetInterfaces(v []*Interface) {
+	o.Interfaces = v
+}
+
+// GetPrivateHostID returns value of PrivateHostID
+func (o *Server) GetPrivateHostID() types.ID {
+	return o.PrivateHostID
+}
+
+// SetPrivateHostID sets value to PrivateHostID
+func (o *Server) SetPrivateHostID(v types.ID) {
+	o.PrivateHostID = v
+}
+
+// GetPrivateHostName returns value of PrivateHostName
+func (o *Server) GetPrivateHostName() string {
+	return o.PrivateHostName
+}
+
+// SetPrivateHostName sets value to PrivateHostName
+func (o *Server) SetPrivateHostName(v string) {
+	o.PrivateHostName = v
+}
+
+// GetBundleInfo returns value of BundleInfo
+func (o *Server) GetBundleInfo() *naked.BundleInfo {
+	return o.BundleInfo
+}
+
+// SetBundleInfo sets value to BundleInfo
+func (o *Server) SetBundleInfo(v *naked.BundleInfo) {
+	o.BundleInfo = v
+}
+
+// GetStorage returns value of Storage
+func (o *Server) GetStorage() *naked.Storage {
+	return o.Storage
+}
+
+// SetStorage sets value to Storage
+func (o *Server) SetStorage(v *naked.Storage) {
+	o.Storage = v
+}
+
+// GetIcon returns value of Icon
+func (o *Server) GetIcon() *naked.Icon {
+	return o.Icon
+}
+
+// SetIcon sets value to Icon
+func (o *Server) SetIcon(v *naked.Icon) {
+	o.Icon = v
+}
+
+// GetCreatedAt returns value of CreatedAt
+func (o *Server) GetCreatedAt() *time.Time {
+	return o.CreatedAt
+}
+
+// SetCreatedAt sets value to CreatedAt
+func (o *Server) SetCreatedAt(v *time.Time) {
+	o.CreatedAt = v
+}
+
+// GetModifiedAt returns value of ModifiedAt
+func (o *Server) GetModifiedAt() *time.Time {
+	return o.ModifiedAt
+}
+
+// SetModifiedAt sets value to ModifiedAt
+func (o *Server) SetModifiedAt(v *time.Time) {
+	o.ModifiedAt = v
+}
+
+// convertTo returns naked Server
+func (o *Server) convertTo() (*naked.Server, error) {
+	dest := &naked.Server{}
+	err := mapconv.ConvertTo(o, dest)
+	return dest, err
+}
+
+// convertFrom parse values from naked Server
+func (o *Server) convertFrom(naked *naked.Server) error {
+	return mapconv.ConvertFrom(naked, o)
+}
+
+/*************************************************
+* Interface
+*************************************************/
+
+// Interface represents API parameter/response structure
+type Interface struct {
+	ID                              types.ID
+	MACAddress                      string
+	IPAddress                       string
+	UserIPAddress                   string
+	HostName                        string
+	SwitchID                        types.ID     `mapconv:"Switch.ID"`
+	SwitchName                      string       `mapconv:"Switch.Name"`
+	SwitchScope                     types.EScope `mapconv:"Switch.Scope"`
+	UserSubnetDefaultRoute          string       `mapconv:"Switch.UserSubnet.DefaultRoute"`
+	UserSubnetNetworkMaskLen        int          `mapconv:"Switch.UserSubnet.NetworkMaskLen"`
+	SubnetDefaultRoute              string       `mapconv:"Switch.Subnet.DefaultRoute"`
+	SubnetNetworkMaskLen            int          `mapconv:"Switch.Subnet.NetworkMaskLen"`
+	SubnetNetworkAddress            string       `mapconv:"Switch.Subnet.NetworkAddress"`
+	SubnetBandWidthMbps             int          `mapconv:"Switch.Subnet.Internet.BandWidthMbps"`
+	PacketFilterID                  string       `mapconv:"PacketFilter.ID"`
+	PacketFilterName                string       `mapconv:"PacketFilter.Name"`
+	PacketFilterRequiredHostVersion int          `mapconv:"PacketFilter.RequiredHostVersionn"`
+}
+
+// Validate validates by field tags
+func (o *Interface) Validate() error {
+	return validator.New().Struct(o)
+}
+
+// GetID returns value of ID
+func (o *Interface) GetID() types.ID {
+	return o.ID
+}
+
+// SetID sets value to ID
+func (o *Interface) SetID(v types.ID) {
+	o.ID = v
+}
+
+// GetStringID gets value to StringID
+func (o *Interface) GetStringID() string {
+	return getStringID(o)
+}
+
+// SetStringID sets value to StringID
+func (o *Interface) SetStringID(v string) {
+	setStringID(o, v)
+}
+
+// GetInt64ID gets value to Int64ID
+func (o *Interface) GetInt64ID() int64 {
+	return getInt64ID(o)
+}
+
+// SetInt64ID sets value to Int64ID
+func (o *Interface) SetInt64ID(v int64) {
+	setInt64ID(o, v)
+}
+
+// GetMACAddress returns value of MACAddress
+func (o *Interface) GetMACAddress() string {
+	return o.MACAddress
+}
+
+// SetMACAddress sets value to MACAddress
+func (o *Interface) SetMACAddress(v string) {
+	o.MACAddress = v
+}
+
+// GetIPAddress returns value of IPAddress
+func (o *Interface) GetIPAddress() string {
+	return o.IPAddress
+}
+
+// SetIPAddress sets value to IPAddress
+func (o *Interface) SetIPAddress(v string) {
+	o.IPAddress = v
+}
+
+// GetUserIPAddress returns value of UserIPAddress
+func (o *Interface) GetUserIPAddress() string {
+	return o.UserIPAddress
+}
+
+// SetUserIPAddress sets value to UserIPAddress
+func (o *Interface) SetUserIPAddress(v string) {
+	o.UserIPAddress = v
+}
+
+// GetHostName returns value of HostName
+func (o *Interface) GetHostName() string {
+	return o.HostName
+}
+
+// SetHostName sets value to HostName
+func (o *Interface) SetHostName(v string) {
+	o.HostName = v
+}
+
+// GetSwitchID returns value of SwitchID
+func (o *Interface) GetSwitchID() types.ID {
+	return o.SwitchID
+}
+
+// SetSwitchID sets value to SwitchID
+func (o *Interface) SetSwitchID(v types.ID) {
+	o.SwitchID = v
+}
+
+// GetSwitchName returns value of SwitchName
+func (o *Interface) GetSwitchName() string {
+	return o.SwitchName
+}
+
+// SetSwitchName sets value to SwitchName
+func (o *Interface) SetSwitchName(v string) {
+	o.SwitchName = v
+}
+
+// GetSwitchScope returns value of SwitchScope
+func (o *Interface) GetSwitchScope() types.EScope {
+	return o.SwitchScope
+}
+
+// SetSwitchScope sets value to SwitchScope
+func (o *Interface) SetSwitchScope(v types.EScope) {
+	o.SwitchScope = v
+}
+
+// GetUserSubnetDefaultRoute returns value of UserSubnetDefaultRoute
+func (o *Interface) GetUserSubnetDefaultRoute() string {
+	return o.UserSubnetDefaultRoute
+}
+
+// SetUserSubnetDefaultRoute sets value to UserSubnetDefaultRoute
+func (o *Interface) SetUserSubnetDefaultRoute(v string) {
+	o.UserSubnetDefaultRoute = v
+}
+
+// GetUserSubnetNetworkMaskLen returns value of UserSubnetNetworkMaskLen
+func (o *Interface) GetUserSubnetNetworkMaskLen() int {
+	return o.UserSubnetNetworkMaskLen
+}
+
+// SetUserSubnetNetworkMaskLen sets value to UserSubnetNetworkMaskLen
+func (o *Interface) SetUserSubnetNetworkMaskLen(v int) {
+	o.UserSubnetNetworkMaskLen = v
+}
+
+// GetSubnetDefaultRoute returns value of SubnetDefaultRoute
+func (o *Interface) GetSubnetDefaultRoute() string {
+	return o.SubnetDefaultRoute
+}
+
+// SetSubnetDefaultRoute sets value to SubnetDefaultRoute
+func (o *Interface) SetSubnetDefaultRoute(v string) {
+	o.SubnetDefaultRoute = v
+}
+
+// GetSubnetNetworkMaskLen returns value of SubnetNetworkMaskLen
+func (o *Interface) GetSubnetNetworkMaskLen() int {
+	return o.SubnetNetworkMaskLen
+}
+
+// SetSubnetNetworkMaskLen sets value to SubnetNetworkMaskLen
+func (o *Interface) SetSubnetNetworkMaskLen(v int) {
+	o.SubnetNetworkMaskLen = v
+}
+
+// GetSubnetNetworkAddress returns value of SubnetNetworkAddress
+func (o *Interface) GetSubnetNetworkAddress() string {
+	return o.SubnetNetworkAddress
+}
+
+// SetSubnetNetworkAddress sets value to SubnetNetworkAddress
+func (o *Interface) SetSubnetNetworkAddress(v string) {
+	o.SubnetNetworkAddress = v
+}
+
+// GetSubnetBandWidthMbps returns value of SubnetBandWidthMbps
+func (o *Interface) GetSubnetBandWidthMbps() int {
+	return o.SubnetBandWidthMbps
+}
+
+// SetSubnetBandWidthMbps sets value to SubnetBandWidthMbps
+func (o *Interface) SetSubnetBandWidthMbps(v int) {
+	o.SubnetBandWidthMbps = v
+}
+
+// GetPacketFilterID returns value of PacketFilterID
+func (o *Interface) GetPacketFilterID() string {
+	return o.PacketFilterID
+}
+
+// SetPacketFilterID sets value to PacketFilterID
+func (o *Interface) SetPacketFilterID(v string) {
+	o.PacketFilterID = v
+}
+
+// GetPacketFilterName returns value of PacketFilterName
+func (o *Interface) GetPacketFilterName() string {
+	return o.PacketFilterName
+}
+
+// SetPacketFilterName sets value to PacketFilterName
+func (o *Interface) SetPacketFilterName(v string) {
+	o.PacketFilterName = v
+}
+
+// GetPacketFilterRequiredHostVersion returns value of PacketFilterRequiredHostVersion
+func (o *Interface) GetPacketFilterRequiredHostVersion() int {
+	return o.PacketFilterRequiredHostVersion
+}
+
+// SetPacketFilterRequiredHostVersion sets value to PacketFilterRequiredHostVersion
+func (o *Interface) SetPacketFilterRequiredHostVersion(v int) {
+	o.PacketFilterRequiredHostVersion = v
+}
+
+// convertTo returns naked Interface
+func (o *Interface) convertTo() (*naked.Interface, error) {
+	dest := &naked.Interface{}
+	err := mapconv.ConvertTo(o, dest)
+	return dest, err
+}
+
+// convertFrom parse values from naked Interface
+func (o *Interface) convertFrom(naked *naked.Interface) error {
+	return mapconv.ConvertFrom(naked, o)
+}
+
+/*************************************************
+* ServerCreateRequest
+*************************************************/
+
+// ServerCreateRequest represents API parameter/response structure
+type ServerCreateRequest struct {
+	CPU                  int                   `mapconv:"ServerPlan.CPU"`
+	MemoryMB             int                   `mapconv:"ServerPlan.MemoryMB"`
+	ServerPlanGeneration types.EPlanGeneration `mapconv:"ServerPlan.Generation"`
+	ConnectedSwitches    []*ConnectedSwitch    `json:",omitempty" mapconv:",recursive"`
+	InterfaceDriver      types.EInterfaceDriver
+	HostName             string
+	Name                 string `validate:"required"`
+	Description          string `validate:"min=0,max=512"`
+	Tags                 []string
+	IconID               types.ID `mapconv:"Icon.ID"`
+	WaitDiskMigration    bool     `json:",omitempty" mapconv:",omitempty"`
+}
+
+// Validate validates by field tags
+func (o *ServerCreateRequest) Validate() error {
+	return validator.New().Struct(o)
+}
+
+// GetCPU returns value of CPU
+func (o *ServerCreateRequest) GetCPU() int {
+	return o.CPU
+}
+
+// SetCPU sets value to CPU
+func (o *ServerCreateRequest) SetCPU(v int) {
+	o.CPU = v
+}
+
+// GetMemoryMB returns value of MemoryMB
+func (o *ServerCreateRequest) GetMemoryMB() int {
+	return o.MemoryMB
+}
+
+// SetMemoryMB sets value to MemoryMB
+func (o *ServerCreateRequest) SetMemoryMB(v int) {
+	o.MemoryMB = v
+}
+
+// GetMemoryGB gets value to MemoryGB
+func (o *ServerCreateRequest) GetMemoryGB() int {
+	return getMemoryGB(o)
+}
+
+// SetMemoryGB sets value to MemoryGB
+func (o *ServerCreateRequest) SetMemoryGB(v int) {
+	setMemoryGB(o, v)
+}
+
+// GetServerPlanGeneration returns value of ServerPlanGeneration
+func (o *ServerCreateRequest) GetServerPlanGeneration() types.EPlanGeneration {
+	return o.ServerPlanGeneration
+}
+
+// SetServerPlanGeneration sets value to ServerPlanGeneration
+func (o *ServerCreateRequest) SetServerPlanGeneration(v types.EPlanGeneration) {
+	o.ServerPlanGeneration = v
+}
+
+// GetConnectedSwitches returns value of ConnectedSwitches
+func (o *ServerCreateRequest) GetConnectedSwitches() []*ConnectedSwitch {
+	return o.ConnectedSwitches
+}
+
+// SetConnectedSwitches sets value to ConnectedSwitches
+func (o *ServerCreateRequest) SetConnectedSwitches(v []*ConnectedSwitch) {
+	o.ConnectedSwitches = v
+}
+
+// GetInterfaceDriver returns value of InterfaceDriver
+func (o *ServerCreateRequest) GetInterfaceDriver() types.EInterfaceDriver {
+	return o.InterfaceDriver
+}
+
+// SetInterfaceDriver sets value to InterfaceDriver
+func (o *ServerCreateRequest) SetInterfaceDriver(v types.EInterfaceDriver) {
+	o.InterfaceDriver = v
+}
+
+// GetHostName returns value of HostName
+func (o *ServerCreateRequest) GetHostName() string {
+	return o.HostName
+}
+
+// SetHostName sets value to HostName
+func (o *ServerCreateRequest) SetHostName(v string) {
+	o.HostName = v
+}
+
+// GetName returns value of Name
+func (o *ServerCreateRequest) GetName() string {
+	return o.Name
+}
+
+// SetName sets value to Name
+func (o *ServerCreateRequest) SetName(v string) {
+	o.Name = v
+}
+
+// GetDescription returns value of Description
+func (o *ServerCreateRequest) GetDescription() string {
+	return o.Description
+}
+
+// SetDescription sets value to Description
+func (o *ServerCreateRequest) SetDescription(v string) {
+	o.Description = v
+}
+
+// GetTags returns value of Tags
+func (o *ServerCreateRequest) GetTags() []string {
+	return o.Tags
+}
+
+// SetTags sets value to Tags
+func (o *ServerCreateRequest) SetTags(v []string) {
+	o.Tags = v
+}
+
+// GetIconID returns value of IconID
+func (o *ServerCreateRequest) GetIconID() types.ID {
+	return o.IconID
+}
+
+// SetIconID sets value to IconID
+func (o *ServerCreateRequest) SetIconID(v types.ID) {
+	o.IconID = v
+}
+
+// GetWaitDiskMigration returns value of WaitDiskMigration
+func (o *ServerCreateRequest) GetWaitDiskMigration() bool {
+	return o.WaitDiskMigration
+}
+
+// SetWaitDiskMigration sets value to WaitDiskMigration
+func (o *ServerCreateRequest) SetWaitDiskMigration(v bool) {
+	o.WaitDiskMigration = v
+}
+
+// convertTo returns naked ServerCreateRequest
+func (o *ServerCreateRequest) convertTo() (*naked.Server, error) {
+	dest := &naked.Server{}
+	err := mapconv.ConvertTo(o, dest)
+	return dest, err
+}
+
+// convertFrom parse values from naked ServerCreateRequest
+func (o *ServerCreateRequest) convertFrom(naked *naked.Server) error {
+	return mapconv.ConvertFrom(naked, o)
+}
+
+/*************************************************
+* ConnectedSwitch
+*************************************************/
+
+// ConnectedSwitch represents API parameter/response structure
+type ConnectedSwitch struct {
+	ID    types.ID
+	Scope types.EScope
+}
+
+// Validate validates by field tags
+func (o *ConnectedSwitch) Validate() error {
+	return validator.New().Struct(o)
+}
+
+// GetID returns value of ID
+func (o *ConnectedSwitch) GetID() types.ID {
+	return o.ID
+}
+
+// SetID sets value to ID
+func (o *ConnectedSwitch) SetID(v types.ID) {
+	o.ID = v
+}
+
+// GetStringID gets value to StringID
+func (o *ConnectedSwitch) GetStringID() string {
+	return getStringID(o)
+}
+
+// SetStringID sets value to StringID
+func (o *ConnectedSwitch) SetStringID(v string) {
+	setStringID(o, v)
+}
+
+// GetInt64ID gets value to Int64ID
+func (o *ConnectedSwitch) GetInt64ID() int64 {
+	return getInt64ID(o)
+}
+
+// SetInt64ID sets value to Int64ID
+func (o *ConnectedSwitch) SetInt64ID(v int64) {
+	setInt64ID(o, v)
+}
+
+// GetScope returns value of Scope
+func (o *ConnectedSwitch) GetScope() types.EScope {
+	return o.Scope
+}
+
+// SetScope sets value to Scope
+func (o *ConnectedSwitch) SetScope(v types.EScope) {
+	o.Scope = v
+}
+
+// convertTo returns naked ConnectedSwitch
+func (o *ConnectedSwitch) convertTo() (*naked.ConnectedSwitch, error) {
+	dest := &naked.ConnectedSwitch{}
+	err := mapconv.ConvertTo(o, dest)
+	return dest, err
+}
+
+// convertFrom parse values from naked ConnectedSwitch
+func (o *ConnectedSwitch) convertFrom(naked *naked.ConnectedSwitch) error {
+	return mapconv.ConvertFrom(naked, o)
+}
+
+/*************************************************
+* ServerUpdateRequest
+*************************************************/
+
+// ServerUpdateRequest represents API parameter/response structure
+type ServerUpdateRequest struct {
+	Name        string `validate:"required"`
+	Description string `validate:"min=0,max=512"`
+	Tags        []string
+	IconID      types.ID `mapconv:"Icon.ID"`
+}
+
+// Validate validates by field tags
+func (o *ServerUpdateRequest) Validate() error {
+	return validator.New().Struct(o)
+}
+
+// GetName returns value of Name
+func (o *ServerUpdateRequest) GetName() string {
+	return o.Name
+}
+
+// SetName sets value to Name
+func (o *ServerUpdateRequest) SetName(v string) {
+	o.Name = v
+}
+
+// GetDescription returns value of Description
+func (o *ServerUpdateRequest) GetDescription() string {
+	return o.Description
+}
+
+// SetDescription sets value to Description
+func (o *ServerUpdateRequest) SetDescription(v string) {
+	o.Description = v
+}
+
+// GetTags returns value of Tags
+func (o *ServerUpdateRequest) GetTags() []string {
+	return o.Tags
+}
+
+// SetTags sets value to Tags
+func (o *ServerUpdateRequest) SetTags(v []string) {
+	o.Tags = v
+}
+
+// GetIconID returns value of IconID
+func (o *ServerUpdateRequest) GetIconID() types.ID {
+	return o.IconID
+}
+
+// SetIconID sets value to IconID
+func (o *ServerUpdateRequest) SetIconID(v types.ID) {
+	o.IconID = v
+}
+
+// convertTo returns naked ServerUpdateRequest
+func (o *ServerUpdateRequest) convertTo() (*naked.Server, error) {
+	dest := &naked.Server{}
+	err := mapconv.ConvertTo(o, dest)
+	return dest, err
+}
+
+// convertFrom parse values from naked ServerUpdateRequest
+func (o *ServerUpdateRequest) convertFrom(naked *naked.Server) error {
+	return mapconv.ConvertFrom(naked, o)
+}
+
+/*************************************************
+* ServerChangePlanRequest
+*************************************************/
+
+// ServerChangePlanRequest represents API parameter/response structure
+type ServerChangePlanRequest struct {
+	CPU                  int
+	MemoryMB             int
+	ServerPlanGeneration types.EPlanGeneration
+}
+
+// Validate validates by field tags
+func (o *ServerChangePlanRequest) Validate() error {
+	return validator.New().Struct(o)
+}
+
+// GetCPU returns value of CPU
+func (o *ServerChangePlanRequest) GetCPU() int {
+	return o.CPU
+}
+
+// SetCPU sets value to CPU
+func (o *ServerChangePlanRequest) SetCPU(v int) {
+	o.CPU = v
+}
+
+// GetMemoryMB returns value of MemoryMB
+func (o *ServerChangePlanRequest) GetMemoryMB() int {
+	return o.MemoryMB
+}
+
+// SetMemoryMB sets value to MemoryMB
+func (o *ServerChangePlanRequest) SetMemoryMB(v int) {
+	o.MemoryMB = v
+}
+
+// GetMemoryGB gets value to MemoryGB
+func (o *ServerChangePlanRequest) GetMemoryGB() int {
+	return getMemoryGB(o)
+}
+
+// SetMemoryGB sets value to MemoryGB
+func (o *ServerChangePlanRequest) SetMemoryGB(v int) {
+	setMemoryGB(o, v)
+}
+
+// GetServerPlanGeneration returns value of ServerPlanGeneration
+func (o *ServerChangePlanRequest) GetServerPlanGeneration() types.EPlanGeneration {
+	return o.ServerPlanGeneration
+}
+
+// SetServerPlanGeneration sets value to ServerPlanGeneration
+func (o *ServerChangePlanRequest) SetServerPlanGeneration(v types.EPlanGeneration) {
+	o.ServerPlanGeneration = v
+}
+
+// convertTo returns naked ServerChangePlanRequest
+func (o *ServerChangePlanRequest) convertTo() (*naked.ServerPlan, error) {
+	dest := &naked.ServerPlan{}
+	err := mapconv.ConvertTo(o, dest)
+	return dest, err
+}
+
+// convertFrom parse values from naked ServerChangePlanRequest
+func (o *ServerChangePlanRequest) convertFrom(naked *naked.ServerPlan) error {
+	return mapconv.ConvertFrom(naked, o)
+}
+
+/*************************************************
+* InsertCDROMRequest
+*************************************************/
+
+// InsertCDROMRequest represents API parameter/response structure
+type InsertCDROMRequest struct {
+	ID types.ID
+}
+
+// Validate validates by field tags
+func (o *InsertCDROMRequest) Validate() error {
+	return validator.New().Struct(o)
+}
+
+// GetID returns value of ID
+func (o *InsertCDROMRequest) GetID() types.ID {
+	return o.ID
+}
+
+// SetID sets value to ID
+func (o *InsertCDROMRequest) SetID(v types.ID) {
+	o.ID = v
+}
+
+// GetStringID gets value to StringID
+func (o *InsertCDROMRequest) GetStringID() string {
+	return getStringID(o)
+}
+
+// SetStringID sets value to StringID
+func (o *InsertCDROMRequest) SetStringID(v string) {
+	setStringID(o, v)
+}
+
+// GetInt64ID gets value to Int64ID
+func (o *InsertCDROMRequest) GetInt64ID() int64 {
+	return getInt64ID(o)
+}
+
+// SetInt64ID sets value to Int64ID
+func (o *InsertCDROMRequest) SetInt64ID(v int64) {
+	setInt64ID(o, v)
+}
+
+// convertTo returns naked InsertCDROMRequest
+func (o *InsertCDROMRequest) convertTo() (*naked.CDROM, error) {
+	dest := &naked.CDROM{}
+	err := mapconv.ConvertTo(o, dest)
+	return dest, err
+}
+
+// convertFrom parse values from naked InsertCDROMRequest
+func (o *InsertCDROMRequest) convertFrom(naked *naked.CDROM) error {
+	return mapconv.ConvertFrom(naked, o)
+}
+
+/*************************************************
+* EjectCDROMRequest
+*************************************************/
+
+// EjectCDROMRequest represents API parameter/response structure
+type EjectCDROMRequest struct {
+	ID types.ID
+}
+
+// Validate validates by field tags
+func (o *EjectCDROMRequest) Validate() error {
+	return validator.New().Struct(o)
+}
+
+// GetID returns value of ID
+func (o *EjectCDROMRequest) GetID() types.ID {
+	return o.ID
+}
+
+// SetID sets value to ID
+func (o *EjectCDROMRequest) SetID(v types.ID) {
+	o.ID = v
+}
+
+// GetStringID gets value to StringID
+func (o *EjectCDROMRequest) GetStringID() string {
+	return getStringID(o)
+}
+
+// SetStringID sets value to StringID
+func (o *EjectCDROMRequest) SetStringID(v string) {
+	setStringID(o, v)
+}
+
+// GetInt64ID gets value to Int64ID
+func (o *EjectCDROMRequest) GetInt64ID() int64 {
+	return getInt64ID(o)
+}
+
+// SetInt64ID sets value to Int64ID
+func (o *EjectCDROMRequest) SetInt64ID(v int64) {
+	setInt64ID(o, v)
+}
+
+// convertTo returns naked EjectCDROMRequest
+func (o *EjectCDROMRequest) convertTo() (*naked.CDROM, error) {
+	dest := &naked.CDROM{}
+	err := mapconv.ConvertTo(o, dest)
+	return dest, err
+}
+
+// convertFrom parse values from naked EjectCDROMRequest
+func (o *EjectCDROMRequest) convertFrom(naked *naked.CDROM) error {
+	return mapconv.ConvertFrom(naked, o)
+}
+
+/*************************************************
+* CPUTimeActivity
+*************************************************/
+
+// CPUTimeActivity represents API parameter/response structure
+type CPUTimeActivity struct {
+	Values []naked.MonitorCPUTimeValue `mapconv:"CPU"`
+}
+
+// Validate validates by field tags
+func (o *CPUTimeActivity) Validate() error {
+	return validator.New().Struct(o)
+}
+
+// GetValues returns value of Values
+func (o *CPUTimeActivity) GetValues() []naked.MonitorCPUTimeValue {
+	return o.Values
+}
+
+// convertTo returns naked CPUTimeActivity
+func (o *CPUTimeActivity) convertTo() (*naked.MonitorValues, error) {
+	dest := &naked.MonitorValues{}
+	err := mapconv.ConvertTo(o, dest)
+	return dest, err
+}
+
+// convertFrom parse values from naked CPUTimeActivity
+func (o *CPUTimeActivity) convertFrom(naked *naked.MonitorValues) error {
 	return mapconv.ConvertFrom(naked, o)
 }
 
