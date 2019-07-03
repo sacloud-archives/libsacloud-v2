@@ -6,10 +6,34 @@ import (
 	"github.com/sacloud/libsacloud-v2/sacloud/naked"
 )
 
-func init() {
-	nakedType := meta.Static(naked.PacketFilter{})
+var packetFilterAPI = &schema.Resource{
+	Name:       "PacketFilter",
+	PathName:   "packetfilter",
+	PathSuffix: schema.CloudAPISuffix,
+	OperationsDefineFunc: func(r *schema.Resource) []*schema.Operation {
+		return []*schema.Operation{
+			// find
+			r.DefineOperationFind(packetFilterNakedType, findParameter, packetFilterView),
 
-	pf := &schema.Model{
+			// create
+			r.DefineOperationCreate(packetFilterNakedType, packetFilterCreateParam, packetFilterView),
+
+			// read
+			r.DefineOperationRead(packetFilterNakedType, packetFilterView),
+
+			// update
+			r.DefineOperationUpdate(packetFilterNakedType, packetFilterUpdateParam, packetFilterView),
+
+			// delete
+			r.DefineOperationDelete(),
+		}
+	},
+}
+
+var (
+	packetFilterNakedType = meta.Static(naked.PacketFilter{})
+
+	packetFilterView = &schema.Model{
 		Fields: []*schema.FieldDesc{
 			fields.ID(),
 			fields.Name(),
@@ -21,7 +45,7 @@ func init() {
 		},
 	}
 
-	createParam := &schema.Model{
+	packetFilterCreateParam = &schema.Model{
 		Fields: []*schema.FieldDesc{
 			fields.Name(),
 			fields.Description(),
@@ -29,30 +53,11 @@ func init() {
 		},
 	}
 
-	updateParam := &schema.Model{
+	packetFilterUpdateParam = &schema.Model{
 		Fields: []*schema.FieldDesc{
 			fields.Name(),
 			fields.Description(),
 			fields.PacketFilterExpressions(),
 		},
 	}
-
-	Resources.DefineWith("PacketFilter", func(r *schema.Resource) {
-		r.Operations(
-			// find
-			r.DefineOperationFind(nakedType, findParameter, pf),
-
-			// create
-			r.DefineOperationCreate(nakedType, createParam, pf),
-
-			// read
-			r.DefineOperationRead(nakedType, pf),
-
-			// update
-			r.DefineOperationUpdate(nakedType, updateParam, pf),
-
-			// delete
-			r.DefineOperationDelete(),
-		)
-	}).PathName("packetfilter")
-}
+)

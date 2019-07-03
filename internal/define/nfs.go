@@ -6,10 +6,45 @@ import (
 	"github.com/sacloud/libsacloud-v2/sacloud/naked"
 )
 
-func init() {
-	nakedType := meta.Static(naked.NFS{})
+var nfsAPI = &schema.Resource{
+	Name:       "NFS",
+	PathName:   "appliance",
+	PathSuffix: schema.CloudAPISuffix,
+	OperationsDefineFunc: func(r *schema.Resource) []*schema.Operation {
+		return []*schema.Operation{
+			// find
+			r.DefineOperationApplianceFind(nfsNakedType, findParameter, nfsView),
 
-	nfs := &schema.Model{
+			// create
+			r.DefineOperationApplianceCreate(nfsNakedType, nfsCreateParam, nfsView),
+
+			// read
+			r.DefineOperationApplianceRead(nfsNakedType, nfsView),
+
+			// update
+			r.DefineOperationApplianceUpdate(nfsNakedType, nfsUpdateParam, nfsView),
+
+			// delete
+			r.DefineOperationDelete(),
+
+			// power management(boot/shutdown/reset)
+			r.DefineOperationBoot(),
+			r.DefineOperationShutdown(),
+			r.DefineOperationReset(),
+
+			// monitor
+			r.DefineOperationMonitorChild("FreeDiskSize", "database",
+				monitorParameter, monitors.freeDiskSizeModel()),
+			r.DefineOperationMonitorChild("Interface", "interface",
+				monitorParameter, monitors.interfaceModel()),
+		}
+	},
+}
+
+var (
+	nfsNakedType = meta.Static(naked.NFS{})
+
+	nfsView = &schema.Model{
 		Fields: []*schema.FieldDesc{
 			fields.ID(),
 			fields.Name(),
@@ -41,7 +76,7 @@ func init() {
 		},
 	}
 
-	createParam := &schema.Model{
+	nfsCreateParam = &schema.Model{
 		Fields: []*schema.FieldDesc{
 			fields.NFSClass(),
 			fields.ApplianceSwitchID(),
@@ -56,7 +91,7 @@ func init() {
 		},
 	}
 
-	updateParam := &schema.Model{
+	nfsUpdateParam = &schema.Model{
 		Fields: []*schema.FieldDesc{
 			fields.Name(),
 			fields.Description(),
@@ -64,34 +99,4 @@ func init() {
 			fields.IconID(),
 		},
 	}
-
-	Resources.DefineWith("NFS", func(r *schema.Resource) {
-		r.Operations(
-			// find
-			r.DefineOperationApplianceFind(nakedType, findParameter, nfs),
-
-			// create
-			r.DefineOperationApplianceCreate(nakedType, createParam, nfs),
-
-			// read
-			r.DefineOperationApplianceRead(nakedType, nfs),
-
-			// update
-			r.DefineOperationApplianceUpdate(nakedType, updateParam, nfs),
-
-			// delete
-			r.DefineOperationDelete(),
-
-			// power management(boot/shutdown/reset)
-			r.DefineOperationBoot(),
-			r.DefineOperationShutdown(),
-			r.DefineOperationReset(),
-
-			// monitor
-			r.DefineOperationMonitorChild("FreeDiskSize", "database",
-				monitorParameter, monitors.freeDiskSizeModel()),
-			r.DefineOperationMonitorChild("Interface", "interface",
-				monitorParameter, monitors.interfaceModel()),
-		)
-	}).PathName("appliance")
-}
+)

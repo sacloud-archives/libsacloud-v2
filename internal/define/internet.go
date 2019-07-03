@@ -8,68 +8,24 @@ import (
 	"github.com/sacloud/libsacloud-v2/sacloud/naked"
 )
 
-func init() {
-	nakedType := meta.Static(naked.Internet{})
+var internetAPI = &schema.Resource{
+	Name:       "Internet",
+	PathName:   "internet",
+	PathSuffix: schema.CloudAPISuffix,
+	OperationsDefineFunc: func(r *schema.Resource) []*schema.Operation {
+		return []*schema.Operation{
 
-	internet := models.internetModel()
-
-	createParam := &schema.Model{
-		Fields: []*schema.FieldDesc{
-			fields.Name(),
-			fields.Description(),
-			fields.Tags(),
-			fields.IconID(),
-			fields.NetworkMaskLen(),
-			fields.BandWidthMbps(),
-		},
-	}
-
-	updateParam := &schema.Model{
-		Fields: []*schema.FieldDesc{
-			fields.Name(),
-			fields.Description(),
-			fields.Tags(),
-			fields.IconID(),
-		},
-	}
-
-	updateBandWidthParam := &schema.Model{
-		Name:      "InternetUpdateBandWidthRequest",
-		NakedType: nakedType,
-		Fields: []*schema.FieldDesc{
-			fields.BandWidthMbps(),
-		},
-	}
-
-	addSubnetParam := &schema.Model{
-		Name:      "InternetAddSubnetRequest",
-		NakedType: meta.Static(naked.SubnetOperationRequest{}),
-		Fields: []*schema.FieldDesc{
-			fields.NetworkMaskLen(),
-			fields.NextHop(),
-		},
-	}
-	updateSubnetParam := &schema.Model{
-		Name:      "InternetUpdateSubnetRequest",
-		NakedType: meta.Static(naked.SubnetOperationRequest{}),
-		Fields: []*schema.FieldDesc{
-			fields.NextHop(),
-		},
-	}
-
-	Resources.DefineWith("Internet", func(r *schema.Resource) {
-		r.Operations(
 			// find
-			r.DefineOperationFind(nakedType, findParameter, internet),
+			r.DefineOperationFind(internetNakedType, findParameter, internetView),
 
 			// create
-			r.DefineOperationCreate(nakedType, createParam, internet),
+			r.DefineOperationCreate(internetNakedType, internetCreateParam, internetView),
 
 			// read
-			r.DefineOperationRead(nakedType, internet),
+			r.DefineOperationRead(internetNakedType, internetView),
 
 			// update
-			r.DefineOperationUpdate(nakedType, updateParam, internet),
+			r.DefineOperationUpdate(internetNakedType, internetUpdateParam, internetView),
 
 			// delete
 			r.DefineOperationDelete(),
@@ -79,14 +35,14 @@ func init() {
 				Method(http.MethodPut).
 				PathFormat(schema.IDAndSuffixPathFormat("bandwidth")).
 				RequestEnvelope(&schema.EnvelopePayloadDesc{
-					PayloadType: nakedType,
+					PayloadType: internetNakedType,
 					PayloadName: "Internet",
 				}).
 				Argument(schema.ArgumentZone).
 				Argument(schema.ArgumentID).
-				MappableArgument("param", updateBandWidthParam).
-				ResultFromEnvelope(internet, &schema.EnvelopePayloadDesc{
-					PayloadType: nakedType,
+				MappableArgument("param", internetUpdateBandWidthParam).
+				ResultFromEnvelope(internetView, &schema.EnvelopePayloadDesc{
+					PayloadType: internetNakedType,
 					PayloadName: "Internet",
 				}),
 
@@ -96,7 +52,7 @@ func init() {
 				PathFormat(schema.IDAndSuffixPathFormat("subnet")).
 				Argument(schema.ArgumentZone).
 				Argument(schema.ArgumentID).
-				PassthroughModelArgumentWithEnvelope("param", addSubnetParam).
+				PassthroughModelArgumentWithEnvelope("param", internetAddSubnetParam).
 				ResultFromEnvelope(models.internetSubnetOperationResult(), &schema.EnvelopePayloadDesc{
 					PayloadType: meta.Static(naked.Subnet{}),
 					PayloadName: "Subnet",
@@ -108,11 +64,11 @@ func init() {
 				PathFormat(schema.IDAndSuffixPathFormat("subnet/{{.subnetID}}")).
 				Argument(schema.ArgumentZone).
 				Argument(schema.ArgumentID).
-				Argument(&schema.SimpleArgument{
+				Argument(&schema.Argument{
 					Name: "subnetID",
 					Type: meta.TypeID,
 				}).
-				PassthroughModelArgumentWithEnvelope("param", updateSubnetParam).
+				PassthroughModelArgumentWithEnvelope("param", internetUpdateSubnetParam).
 				ResultFromEnvelope(models.internetSubnetOperationResult(), &schema.EnvelopePayloadDesc{
 					PayloadType: meta.Static(naked.Subnet{}),
 					PayloadName: "Subnet",
@@ -120,7 +76,7 @@ func init() {
 
 			// DeleteSubnet
 			r.DefineSimpleOperation("DeleteSubnet", http.MethodDelete, "subnet/{{.subnetID}}",
-				&schema.SimpleArgument{
+				&schema.Argument{
 					Name: "subnetID",
 					Type: meta.TypeID,
 				},
@@ -128,8 +84,57 @@ func init() {
 
 			// monitor
 			r.DefineOperationMonitor(monitorParameter, monitors.routerModel()),
-		)
 
-		// TODO IPv6関連は後回し
-	})
+			// TODO IPv6関連は後回し
+		}
+	},
 }
+var (
+	internetNakedType = meta.Static(naked.Internet{})
+
+	internetView = models.internetModel()
+
+	internetCreateParam = &schema.Model{
+		Fields: []*schema.FieldDesc{
+			fields.Name(),
+			fields.Description(),
+			fields.Tags(),
+			fields.IconID(),
+			fields.NetworkMaskLen(),
+			fields.BandWidthMbps(),
+		},
+	}
+
+	internetUpdateParam = &schema.Model{
+		Fields: []*schema.FieldDesc{
+			fields.Name(),
+			fields.Description(),
+			fields.Tags(),
+			fields.IconID(),
+		},
+	}
+
+	internetUpdateBandWidthParam = &schema.Model{
+		Name:      "InternetUpdateBandWidthRequest",
+		NakedType: internetNakedType,
+		Fields: []*schema.FieldDesc{
+			fields.BandWidthMbps(),
+		},
+	}
+
+	internetAddSubnetParam = &schema.Model{
+		Name:      "InternetAddSubnetRequest",
+		NakedType: meta.Static(naked.SubnetOperationRequest{}),
+		Fields: []*schema.FieldDesc{
+			fields.NetworkMaskLen(),
+			fields.NextHop(),
+		},
+	}
+	internetUpdateSubnetParam = &schema.Model{
+		Name:      "InternetUpdateSubnetRequest",
+		NakedType: meta.Static(naked.SubnetOperationRequest{}),
+		Fields: []*schema.FieldDesc{
+			fields.NextHop(),
+		},
+	}
+)

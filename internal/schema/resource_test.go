@@ -38,7 +38,7 @@ func TestResource_LowerName(t *testing.T) {
 
 	for _, expect := range expects {
 		r := &Resource{
-			name: expect.resourceName,
+			Name: expect.resourceName,
 		}
 		require.Equal(t, expect.lowerName, r.FileSafeName())
 	}
@@ -63,8 +63,8 @@ func TestResource_ImportStatements(t *testing.T) {
 			resource: &Resource{
 				operations: []*Operation{
 					{
-						arguments: []Argument{
-							&SimpleArgument{
+						arguments: []*Argument{
+							{
 								Type: meta.Static(sacloud.Client{}),
 							},
 						},
@@ -99,8 +99,8 @@ func TestResources_ImportStatements(t *testing.T) {
 				{
 					operations: []*Operation{
 						{
-							arguments: []Argument{
-								&SimpleArgument{
+							arguments: []*Argument{
+								{
 									Type: meta.Static(sacloud.Client{}),
 								},
 							},
@@ -110,8 +110,8 @@ func TestResources_ImportStatements(t *testing.T) {
 				{
 					operations: []*Operation{
 						{
-							arguments: []Argument{
-								&SimpleArgument{
+							arguments: []*Argument{
+								{
 									Type: meta.Static(sacloud.Client{}),
 								},
 							},

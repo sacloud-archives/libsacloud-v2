@@ -6,10 +6,49 @@ import (
 	"github.com/sacloud/libsacloud-v2/sacloud/naked"
 )
 
-func init() {
-	nakedType := meta.Static(naked.LoadBalancer{})
+var loadBalancerAPI = &schema.Resource{
+	Name:       "LoadBalancer",
+	PathName:   "appliance",
+	PathSuffix: schema.CloudAPISuffix,
+	OperationsDefineFunc: func(r *schema.Resource) []*schema.Operation {
+		return []*schema.Operation{
+			// find
+			r.DefineOperationApplianceFind(loadBalancerNakedType, findParameter, loadBalancerView),
 
-	loadBalancer := &schema.Model{
+			// create
+			r.DefineOperationApplianceCreate(loadBalancerNakedType, loadBalancerCreateParam, loadBalancerView),
+
+			// read
+			r.DefineOperationApplianceRead(loadBalancerNakedType, loadBalancerView),
+
+			// update
+			r.DefineOperationApplianceUpdate(loadBalancerNakedType, loadBalancerUpdateParam, loadBalancerView),
+
+			// delete
+			r.DefineOperationDelete(),
+
+			// config
+			r.DefineOperationConfig(),
+
+			// power management(boot/shutdown/reset)
+			r.DefineOperationBoot(),
+			r.DefineOperationShutdown(),
+			r.DefineOperationReset(),
+
+			// monitor
+			r.DefineOperationMonitorChild("Interface", "interface",
+				monitorParameter, monitors.interfaceModel()),
+
+			// status
+			r.DefineOperationStatus(meta.Static(naked.LoadBalancerStatus{}), loadBalancerStatus),
+		}
+	},
+}
+
+var (
+	loadBalancerNakedType = meta.Static(naked.LoadBalancer{})
+
+	loadBalancerView = &schema.Model{
 		Fields: []*schema.FieldDesc{
 			fields.ID(),
 			fields.Name(),
@@ -45,7 +84,7 @@ func init() {
 		},
 	}
 
-	createParam := &schema.Model{
+	loadBalancerCreateParam = &schema.Model{
 		Fields: []*schema.FieldDesc{
 			fields.LoadBalancerClass(),
 			fields.ApplianceSwitchID(),
@@ -62,7 +101,7 @@ func init() {
 		},
 	}
 
-	updateParam := &schema.Model{
+	loadBalancerUpdateParam = &schema.Model{
 		Fields: []*schema.FieldDesc{
 			fields.Name(),
 			fields.Description(),
@@ -72,7 +111,7 @@ func init() {
 		},
 	}
 
-	statusResult := &schema.Model{
+	loadBalancerStatus = &schema.Model{
 		Name: "LoadBalancerStatus",
 		Fields: []*schema.FieldDesc{
 			{
@@ -122,38 +161,4 @@ func init() {
 		},
 		NakedType: meta.Static(naked.LoadBalancerStatus{}),
 	}
-
-	Resources.DefineWith("LoadBalancer", func(r *schema.Resource) {
-		r.Operations(
-			// find
-			r.DefineOperationApplianceFind(nakedType, findParameter, loadBalancer),
-
-			// create
-			r.DefineOperationApplianceCreate(nakedType, createParam, loadBalancer),
-
-			// read
-			r.DefineOperationApplianceRead(nakedType, loadBalancer),
-
-			// update
-			r.DefineOperationApplianceUpdate(nakedType, updateParam, loadBalancer),
-
-			// delete
-			r.DefineOperationDelete(),
-
-			// config
-			r.DefineOperationConfig(),
-
-			// power management(boot/shutdown/reset)
-			r.DefineOperationBoot(),
-			r.DefineOperationShutdown(),
-			r.DefineOperationReset(),
-
-			// monitor
-			r.DefineOperationMonitorChild("Interface", "interface",
-				monitorParameter, monitors.interfaceModel()),
-
-			// status
-			r.DefineOperationStatus(meta.Static(naked.LoadBalancerStatus{}), statusResult),
-		)
-	}).PathName("appliance")
-}
+)
